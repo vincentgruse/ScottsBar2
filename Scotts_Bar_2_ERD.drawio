@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-03-06T18:38:51.899Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" etag="HVJEKnen6mMyei9nuNps" version="24.0.2" type="github">
+<mxfile host="app.diagrams.net" modified="2024-03-06T19:16:58.577Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" etag="ZQYdRTWF-q0IrRybBcv2" version="24.0.2" type="github">
   <diagram id="R2lEEEUBdFMjLlhIrx00" name="Page-1">
     <mxGraphModel dx="1434" dy="746" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="0" fold="1" page="1" pageScale="1" pageWidth="10000" pageHeight="10000" math="0" shadow="0" extFonts="Permanent Marker^https://fonts.googleapis.com/css?family=Permanent+Marker">
       <root>
@@ -419,12 +419,6 @@
         </mxCell>
         <mxCell id="fT3Tlq7CKn-Jqt1ZwOdJ-95" value="Liquor tax" style="ellipse;whiteSpace=wrap;html=1;align=center;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
           <mxGeometry x="340" y="320" width="100" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="fT3Tlq7CKn-Jqt1ZwOdJ-129" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" parent="1" source="fT3Tlq7CKn-Jqt1ZwOdJ-98" target="OXciILcsvzSkTtV1qYaF-4" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="fT3Tlq7CKn-Jqt1ZwOdJ-98" value="Sales tax" style="ellipse;whiteSpace=wrap;html=1;align=center;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
-          <mxGeometry x="670" y="790" width="100" height="40" as="geometry" />
         </mxCell>
         <mxCell id="fT3Tlq7CKn-Jqt1ZwOdJ-100" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" parent="1" source="fT3Tlq7CKn-Jqt1ZwOdJ-102" target="fT3Tlq7CKn-Jqt1ZwOdJ-105" edge="1">
           <mxGeometry relative="1" as="geometry" />
