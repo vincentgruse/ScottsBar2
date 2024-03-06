@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2024-03-06T18:36:13.036Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" etag="C6x5HIzB8T0vjzS84BPR" version="24.0.2" type="github">
+<mxfile host="app.diagrams.net" modified="2024-03-06T18:38:14.478Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" etag="qcSEAd-nO2O4yeFqZhvd" version="24.0.2" type="github">
   <diagram id="R2lEEEUBdFMjLlhIrx00" name="Page-1">
-    <mxGraphModel dx="1554" dy="928" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="0" fold="1" page="1" pageScale="1" pageWidth="10000" pageHeight="10000" math="0" shadow="0" extFonts="Permanent Marker^https://fonts.googleapis.com/css?family=Permanent+Marker">
+    <mxGraphModel dx="1434" dy="746" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="0" fold="1" page="1" pageScale="1" pageWidth="10000" pageHeight="10000" math="0" shadow="0" extFonts="Permanent Marker^https://fonts.googleapis.com/css?family=Permanent+Marker">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -74,6 +74,14 @@
         </mxCell>
         <mxCell id="fT3Tlq7CKn-Jqt1ZwOdJ-109" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" parent="1" source="OXciILcsvzSkTtV1qYaF-30" target="fT3Tlq7CKn-Jqt1ZwOdJ-102" edge="1">
           <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r46aiMPrA0KQtqXdSJ5M-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;" edge="1" parent="1" source="OXciILcsvzSkTtV1qYaF-30" target="r46aiMPrA0KQtqXdSJ5M-1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="920" y="200" />
+              <mxPoint x="1050" y="200" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="OXciILcsvzSkTtV1qYaF-30" value="Vendor" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
           <mxGeometry x="870" y="230" width="100" height="40" as="geometry" />
@@ -477,6 +485,9 @@
         </mxCell>
         <mxCell id="fT3Tlq7CKn-Jqt1ZwOdJ-61" value="Phone" style="ellipse;whiteSpace=wrap;html=1;align=center;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
           <mxGeometry x="300" y="760" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r46aiMPrA0KQtqXdSJ5M-1" value="Vendor Phone" style="ellipse;whiteSpace=wrap;html=1;align=center;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="95" width="100" height="40" as="geometry" />
         </mxCell>
         <mxCell id="KZJG9HeRuJvANU3pxZ1K-1" value="1,1" style="text;strokeColor=none;align=center;fillColor=none;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="1105" y="630" width="60" height="30" as="geometry" />
