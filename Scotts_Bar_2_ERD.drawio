@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-03-06T18:38:14.478Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" etag="qcSEAd-nO2O4yeFqZhvd" version="24.0.2" type="github">
+<mxfile host="app.diagrams.net" modified="2024-03-06T18:38:51.899Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" etag="HVJEKnen6mMyei9nuNps" version="24.0.2" type="github">
   <diagram id="R2lEEEUBdFMjLlhIrx00" name="Page-1">
     <mxGraphModel dx="1434" dy="746" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="0" fold="1" page="1" pageScale="1" pageWidth="10000" pageHeight="10000" math="0" shadow="0" extFonts="Permanent Marker^https://fonts.googleapis.com/css?family=Permanent+Marker">
       <root>
@@ -486,7 +486,7 @@
         <mxCell id="fT3Tlq7CKn-Jqt1ZwOdJ-61" value="Phone" style="ellipse;whiteSpace=wrap;html=1;align=center;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
           <mxGeometry x="300" y="760" width="100" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="r46aiMPrA0KQtqXdSJ5M-1" value="Vendor Phone" style="ellipse;whiteSpace=wrap;html=1;align=center;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="1">
+        <mxCell id="r46aiMPrA0KQtqXdSJ5M-1" value="Vendor Email" style="ellipse;whiteSpace=wrap;html=1;align=center;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="1">
           <mxGeometry x="1000" y="95" width="100" height="40" as="geometry" />
         </mxCell>
         <mxCell id="KZJG9HeRuJvANU3pxZ1K-1" value="1,1" style="text;strokeColor=none;align=center;fillColor=none;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
