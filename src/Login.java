@@ -2,10 +2,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+// Need an import from the MainWindow class
+
 public class Login extends JFrame implements ActionListener{
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JButton submitButton;
+
+
 
     public Login() {
         setTitle("Login Form");
@@ -69,6 +73,12 @@ public class Login extends JFrame implements ActionListener{
         // For simplicity, let's assume correct username is "admin" and password is "password"
         if (username.equals("admin") && password.equals("password")) {
             JOptionPane.showMessageDialog(this, "Login Successful!");
+            setVisible(false);
+
+            // This will run the actual program
+            // MainWindow mainWinder = new MainWindow();
+            // mainWindow.setVisible(true);
+
         } else {
             JOptionPane.showMessageDialog(this, "Invalid Username or Password", "Error", JOptionPane.ERROR_MESSAGE);
         }
