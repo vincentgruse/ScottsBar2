@@ -13,13 +13,7 @@ public class Login extends JFrame implements ActionListener{
 
     public Login() {
         setTitle("Login Form");
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int width = 800;
-        int height = 500;
-
-        setSize(width, height);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Center the JFrame on the screen
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         // Create panel
         JPanel panel = new JPanel(new GridBagLayout());
@@ -75,9 +69,8 @@ public class Login extends JFrame implements ActionListener{
             JOptionPane.showMessageDialog(this, "Login Successful!");
             setVisible(false);
 
-            // This will run the actual program
-            // MainWindow mainWinder = new MainWindow();
-            // mainWindow.setVisible(true);
+            AdminDashboard adminDashboard = new AdminDashboard();
+            adminDashboard.setVisible(true);
 
         } else {
             JOptionPane.showMessageDialog(this, "Invalid Username or Password", "Error", JOptionPane.ERROR_MESSAGE);
