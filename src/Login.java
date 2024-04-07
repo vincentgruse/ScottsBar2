@@ -78,10 +78,6 @@ public class Login extends JFrame implements ActionListener{
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new Login().setVisible(true);
-            }
-        });
+        SwingUtilities.invokeLater(() -> new Login().setVisible(true));
     }
 }
