@@ -1,16 +1,17 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+package Helper;
+
+import java.sql.*;
 
 public class DatabaseHelper {
+
     // JDBC URL, username, and password of MySQL server
-    String url = "jdbc:mysql://localhost:3306/mydatabase";
-    String user = "username";
-    String password = "password";
+    private static final String url = "jdbc:mysql://localhost:3306/mydatabase";
+    private static final String user = "username";
+    private static final String password = "password";
 
     // JDBC variables for opening, managing and closing connection
-    Connection connection = null;
-    public void setup() {
+    public static Connection connection = null;
+    public static void setup() {
         try {
             // Connecting to the MySQL database
             connection = DriverManager.getConnection(url, user, password);
