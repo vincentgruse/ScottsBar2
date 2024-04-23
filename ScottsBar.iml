@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="groovy-4.0.20" level="application" />
+    <orderEntry type="library" name="org.mindrot:jbcrypt:0.4" level="project" />
   </component>
 </module>
