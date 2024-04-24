@@ -4,9 +4,9 @@ import java.sql.SQLException;
 
 public class DatabaseHelper {
     // JDBC URL, username, and password of MySQL server
-    String url = "jdbc:mysql://localhost:3306/1111111111111111111";
+    String url = "jdbc:mysql://localhost:3306";
     String user = "root";
-    String password = "Rv00198269!@";
+    String password = "";
 
     // JDBC variables for opening, managing and closing connection
     Connection connection = null;
