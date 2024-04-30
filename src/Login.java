@@ -69,8 +69,6 @@ public class Login extends JFrame implements ActionListener{
         System.out.println("Username: " + username);
         System.out.println("Password: " + password);
 
-        // Here, you can perform the authentication logic
-        // For simplicity, let's assume correct username is "admin" and password is "password"
         if (username.equals("admin") && password.equals("password")) {
             JOptionPane.showMessageDialog(this, "Login Successful!");
             setVisible(false);
