@@ -1,4 +1,4 @@
-package Entities;
+package src.Entities;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static Helper.DatabaseHelper.connection;
+import static src.Helper.DatabaseHelper.connection;
 
 public class Grocery {
     public Long categoryID;

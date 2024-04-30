@@ -1,6 +1,6 @@
-package Entities;
+package src.Entities;
 
-import Helper.DatabaseHelper;
+import src.Helper.DatabaseHelper;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static Helper.CommonHelper.hashPassword;
+import static src.Helper.CommonHelper.hashPassword;
 
 public class Employee {
     public Integer employeeSSN;

@@ -1,6 +1,6 @@
-package Entities;
+package src.Entities;
 
-import Helper.DatabaseHelper;
+import src.Helper.DatabaseHelper;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

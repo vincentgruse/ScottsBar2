@@ -1,8 +1,8 @@
+package src.Login;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-
-// Need an import from the MainWindow class
 
 public class Login extends JFrame implements ActionListener{
     private JTextField usernameField;
