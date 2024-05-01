@@ -1,4 +1,6 @@
-package src.Login;
+package Login;
+
+import Dashboard.AdminDashboard;
 
 import javax.swing.*;
 import java.awt.*;

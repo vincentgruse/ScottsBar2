@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static src.Helper.CommonHelper.hashPassword;
+import static Helper.CommonHelper.hashPassword;
 import static src.Helper.DatabaseHelper.connection;
 
 public class Product {

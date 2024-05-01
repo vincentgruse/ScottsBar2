@@ -1,4 +1,4 @@
-package src.Entities;
+package Entities;
 
 import src.Helper.DatabaseHelper;
 
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static src.Helper.CommonHelper.hashPassword;
+import static Helper.CommonHelper.hashPassword;
 
 public class Employee {
     public Integer employeeSSN;
