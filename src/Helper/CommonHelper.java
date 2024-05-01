@@ -1,4 +1,4 @@
-package src.Helper;
+package Helper;
 
 import org.mindrot.jbcrypt.BCrypt;
 
