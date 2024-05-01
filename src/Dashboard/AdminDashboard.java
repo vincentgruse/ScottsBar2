@@ -1,7 +1,8 @@
-package src;
+package Dashboard;
 
 import javax.swing.*;
 import java.awt.*;
+import Login.Login;
 
 public class AdminDashboard extends JFrame {
     // Constants for colors, border thickness, and assets path
