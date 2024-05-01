@@ -89,7 +89,7 @@ public class EmployeeForm extends JFrame implements ActionListener {
 
     // Method to generate username
     private String generateUsername(String firstName, String lastName) {
-        String username = "";
+        String username;
         if (lastName.length() >= 5) {
             username = lastName.substring(0, 5) + firstName.charAt(0);
         } else {
