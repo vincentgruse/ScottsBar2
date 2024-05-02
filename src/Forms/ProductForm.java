@@ -1,12 +1,12 @@
 package Forms;
 
 import javax.swing.*;
-import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Objects;
 
 public class ProductForm extends JFrame implements ActionListener {
     // Labels
@@ -142,7 +142,7 @@ public class ProductForm extends JFrame implements ActionListener {
             int quantity = (int) quantitySpinner.getValue();
 
             // Check for empty fields
-            if (brand.isEmpty() || category.isEmpty() || description.isEmpty() || vendor.isEmpty()) {
+            if (brand.isEmpty() || Objects.requireNonNull(category).isEmpty() || description.isEmpty() || vendor.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please complete required fields.");
                 return;
             }

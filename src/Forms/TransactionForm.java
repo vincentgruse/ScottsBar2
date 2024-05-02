@@ -134,7 +134,7 @@ public class TransactionForm extends JFrame implements ActionListener {
 
             // Display invalid SKUs, if any
             if (!invalidSkus.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Invalid SKUs, please revise: " + invalidSkus.toString());
+                JOptionPane.showMessageDialog(this, "Invalid SKUs, please revise: " + invalidSkus);
                 return;
             }
 
