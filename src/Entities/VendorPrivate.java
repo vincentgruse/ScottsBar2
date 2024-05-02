@@ -1,4 +1,4 @@
-package src.Entities;
+package Entities;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

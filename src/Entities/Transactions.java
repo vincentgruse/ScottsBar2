@@ -1,4 +1,4 @@
-package src.Entities;
+package Entities;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;

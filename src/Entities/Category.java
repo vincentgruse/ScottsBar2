@@ -1,4 +1,4 @@
-package src.Entities;
+package Entities;
 
 import src.Helper.DatabaseHelper;
 

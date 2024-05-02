@@ -1,7 +1,5 @@
 package Entities;
 
-import src.Helper.DatabaseHelper;
-
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static Helper.CommonHelper.hashPassword;
 import static src.Helper.DatabaseHelper.connection;
 
 public class Product {
