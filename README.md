@@ -13,3 +13,8 @@ Connect to a MySQL dataabase
 ```bash
 mysql -u username -p -h hostname database_name < schema.sql
 ```
+
+# Inserting the Dummy Data
+```bash
+mysql -u username -p -h hostname database_name < dummydata.sql
+```
