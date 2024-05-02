@@ -116,7 +116,7 @@ public class AdminDashboard extends JFrame {
     }
 
     // Method to create the main content panel
-    private JPanel createContentPanel(JPanel titlePanel, JPanel buttonPanel) {
+    public JPanel createContentPanel(JPanel titlePanel, JPanel buttonPanel) {
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.add(titlePanel, BorderLayout.NORTH);
         contentPanel.add(buttonPanel, BorderLayout.WEST);
