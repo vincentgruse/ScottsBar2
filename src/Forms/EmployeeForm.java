@@ -6,18 +6,18 @@ import java.awt.event.*;
 
 public class EmployeeForm extends JFrame implements ActionListener {
     // Labels
-    JLabel firstNameLabel = new JLabel("First Name:");
-    JLabel lastNameLabel = new JLabel("Last Name:");
-    JLabel passwordLabel = new JLabel("Password:");
-    JLabel departmentLabel = new JLabel("Department:");
-    JLabel supervisorLabel = new JLabel("Supervisor:");
+    JLabel firstNameLabel = new JLabel("First Name*:");
+    JLabel lastNameLabel = new JLabel("Last Name*:");
+    JLabel passwordLabel = new JLabel("Password*:");
+    JLabel departmentLabel = new JLabel("Department*:");
+    JLabel supervisorLabel = new JLabel("Supervisor*:");
 
     // Text fields
-    JTextField firstNameField = new JTextField();
-    JTextField lastNameField = new JTextField();
-    JPasswordField passwordField = new JPasswordField();
-    JTextField departmentField = new JTextField();
-    JTextField supervisorField = new JTextField();
+    JTextField firstNameField = new JTextField(20);
+    JTextField lastNameField = new JTextField(20);
+    JPasswordField passwordField = new JPasswordField(20);
+    JTextField departmentField = new JTextField(20);
+    JTextField supervisorField = new JTextField(20);
 
     // Button
     JButton signUpButton = new JButton("Submit");
@@ -25,23 +25,57 @@ public class EmployeeForm extends JFrame implements ActionListener {
     public EmployeeForm() {
         // Setting up the frame
         setTitle("Employee Sign Up Form");
-        setSize(300, 250);
+        setSize(400, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(7, 3));
 
-        // Adding components to the frame
-        add(firstNameLabel);
-        add(firstNameField);
-        add(lastNameLabel);
-        add(lastNameField);
-        add(passwordLabel);
-        add(passwordField);
-        add(departmentLabel);
-        add(departmentField);
-        add(supervisorLabel);
-        add(supervisorField);
-        add(new JLabel()); // Empty space
-        add(signUpButton);
+        // Set icon image
+        ImageIcon icon = new ImageIcon("src/assets/logoSmall.png");
+        setIconImage(icon.getImage());
+
+        // Panel for input fields
+        JPanel inputPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        // Add components to input panel
+        inputPanel.add(firstNameLabel, gbc);
+        gbc.gridx = 1;
+        inputPanel.add(firstNameField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        inputPanel.add(lastNameLabel, gbc);
+        gbc.gridx = 1;
+        inputPanel.add(lastNameField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        inputPanel.add(passwordLabel, gbc);
+        gbc.gridx = 1;
+        inputPanel.add(passwordField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        inputPanel.add(departmentLabel, gbc);
+        gbc.gridx = 1;
+        inputPanel.add(departmentField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        inputPanel.add(supervisorLabel, gbc);
+        gbc.gridx = 1;
+        inputPanel.add(supervisorField, gbc);
+
+        // Panel for buttons
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.add(signUpButton);
+
+        // Add panels to the frame
+        add(inputPanel, BorderLayout.CENTER);
+        add(buttonPanel, BorderLayout.SOUTH);
 
         // Adding action listener to the button
         signUpButton.addActionListener(this);
@@ -84,6 +118,9 @@ public class EmployeeForm extends JFrame implements ActionListener {
                     "Supervisor: " + supervisor + "\n";
 
             JOptionPane.showMessageDialog(this, message);
+
+            // Clearing the fields
+            clearFields();
         }
     }
 
@@ -103,6 +140,15 @@ public class EmployeeForm extends JFrame implements ActionListener {
         // Password must be 8-32 characters long and include at least one number, one capital letter, and one of the specified symbols
         String passwordRegex = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&*()])(?=\\S+$).{8,32}$";
         return password.matches(passwordRegex);
+    }
+
+    // Method to clear fields
+    private void clearFields() {
+        firstNameField.setText("");
+        lastNameField.setText("");
+        passwordField.setText("");
+        departmentField.setText("");
+        supervisorField.setText("");
     }
 
     public static void main(String[] args) {
