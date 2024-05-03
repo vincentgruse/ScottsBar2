@@ -34,11 +34,18 @@ public class TransactionForm extends JFrame implements ActionListener {
         // Setting up the frame
         setTitle("Transaction Form");
         setSize(400, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // Set default close operation to dispose on close
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        // Set icon image (replace "path_to_your_icon_image.png" with the actual path to your icon image)
+        // Set icon image
         ImageIcon icon = new ImageIcon("src/assets/logoSmall.png");
         setIconImage(icon.getImage());
+
+        // Calculate the center of the screen
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (screenSize.width - getWidth()) / 2;
+        int y = (screenSize.height - getHeight()) / 2;
+        setLocation(x, y);
 
         // Panel for input fields
         JPanel inputPanel = new JPanel(new GridBagLayout());

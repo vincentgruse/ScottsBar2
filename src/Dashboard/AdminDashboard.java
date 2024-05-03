@@ -1,15 +1,32 @@
 package Dashboard;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import java.awt.*;
+
 import Login.Login;
 
 public class AdminDashboard extends JFrame {
     // Constants for colors, border thickness, and assets path
-    private static final Color LIGHT_BROWN = Color.decode("#F2E9E2");
-    private static final Color DARK_BROWN = Color.decode("#733B38");
-    private static final int BORDER_THICKNESS = 3;
-    private static final String ASSETS_PATH = "src/assets/";
+    public static final Color LIGHT_BROWN = Color.decode("#F2E9E2");
+    public static final Color DARK_BROWN = Color.decode("#733B38");
+    public static final Color ORANGE = Color.decode("#F0C28E");
+    public static final int BORDER_THICKNESS = 3;
+    public static final int TAB_WIDTH = 250; // Fixed width of the tabs
+    public static final int TAB_HEIGHT = 100; // Fixed height of the tabs
+    public static final String ASSETS_PATH = "src/assets/";
+
+    // Array of tab names and corresponding icon names
+    private final String[] tabNames = {
+            "Home",
+            "Employees",
+            "Departments",
+            "Products",
+            "Customers",
+            "Vendors",
+            "Transactions",
+            "Graphs"
+    };
 
     // Constructor to initialize the UI
     public AdminDashboard() {
@@ -19,17 +36,73 @@ public class AdminDashboard extends JFrame {
     // Method to initialize the UI components
     private void initializeUI() {
         setTitle("Admin Dashboard");
-        setExtendedState(JFrame.MAXIMIZED_BOTH); // Set JFrame to fullscreen
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        // Create title panel, button panel, and content panel
-        JPanel titlePanel = createTitlePanel();
-        JPanel buttonPanel = createButtonPanel();
-        JPanel contentPanel = createContentPanel(titlePanel, buttonPanel);
+        // Set icon image
+        ImageIcon icon = new ImageIcon("src/assets/logoSmall.png");
+        setIconImage(icon.getImage());
 
-        // Add content panel to the frame
-        add(contentPanel);
+        // Create title panel
+        JPanel titlePanel = createTitlePanel();
+
+        // Create tabbed pane
+        JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
+        tabbedPane.setBackground(LIGHT_BROWN);
+
+        // Set custom UI delegate for tabbed pane to customize tab appearance
+        tabbedPane.setUI(new BasicTabbedPaneUI() {
+            @Override
+            protected void installDefaults() {
+                super.installDefaults();
+                tabInsets = new Insets(10, 10, 10, 10); // Adjust tab insets
+            }
+
+            @Override
+            protected void paintTabBorder(Graphics g, int tabPlacement, int tabIndex, int x, int y, int w, int h, boolean isSelected) {
+                g.setColor(DARK_BROWN); // Set border color
+                g.drawRect(x, y, w, h); // Draw border
+            }
+
+            @Override
+            protected int calculateTabWidth(int tabPlacement, int tabIndex, FontMetrics metrics) {
+                return TAB_WIDTH; // Fixed tab width
+            }
+
+            @Override
+            protected int calculateTabHeight(int tabPlacement, int tabIndex, int fontHeight) {
+                return TAB_HEIGHT; // Fixed tab height
+            }
+        });
+
+        // Create tabs and add them to the tabbed pane
+        for (String tabName : tabNames) {
+            ImageIcon tabIcon = new ImageIcon(ASSETS_PATH + tabName.toLowerCase() + ".png");
+            tabbedPane.addTab(tabName, tabIcon, createPanel(tabName));
+        }
+
+        // Add title panel and tabbed pane to the frame
+        getContentPane().add(titlePanel, BorderLayout.NORTH);
+        getContentPane().add(tabbedPane, BorderLayout.CENTER);
+
+        // Set the Home tab as active by default
+        tabbedPane.setSelectedIndex(0);
     }
+
+    // Method to create a panel corresponding to each tab
+    private JPanel createPanel(String tabName) {
+        return switch (tabName) {
+            case "Home" -> HomePanel.createHomePanel();
+            case "Employees" -> EmployeePanel.createEmployeePanel();
+            case "Departments" -> DepartmentPanel.createDepartmentPanel();
+            case "Products" -> ProductPanel.createProductPanel();
+            case "Customers" -> CustomerPanel.createCustomerPanel();
+            case "Vendors" -> VendorPanel.createVendorPanel();
+            case "Transactions" -> TransactionPanel.createTransactionPanel();
+            default -> new JPanel(); // Create empty panel for other tabs for now
+        };
+    }
+
 
     // Method to create the title panel
     private JPanel createTitlePanel() {
@@ -38,17 +111,7 @@ public class AdminDashboard extends JFrame {
         titlePanel.setBorder(BorderFactory.createLineBorder(DARK_BROWN, BORDER_THICKNESS));
 
         // Create logo and text label
-        ImageIcon imageIcon = new ImageIcon(ASSETS_PATH + "logoSmall.png");
-        JLabel imageLabel = new JLabel(imageIcon);
-        JLabel textLabel = new JLabel("Admin Dashboard");
-        textLabel.setFont(new Font("Arial", Font.PLAIN, 30));
-        textLabel.setForeground(LIGHT_BROWN);
-
-        // Create left panel with logo and text
-        JPanel leftPanel = new JPanel();
-        leftPanel.setBackground(DARK_BROWN);
-        leftPanel.add(imageLabel);
-        leftPanel.add(textLabel);
+        JPanel leftPanel = getjPanel();
 
         // Add left panel to the left side of the title bar
         titlePanel.add(leftPanel, BorderLayout.WEST);
@@ -67,61 +130,19 @@ public class AdminDashboard extends JFrame {
         return titlePanel;
     }
 
-    // Method to create the button panel
-    private JPanel createButtonPanel() {
-        JPanel buttonPanel = new JPanel(new GridLayout(8, 1, 10, -BORDER_THICKNESS));
+    private static JPanel getjPanel() {
+        ImageIcon imageIcon = new ImageIcon(ASSETS_PATH + "logoSmall.png");
+        JLabel imageLabel = new JLabel(imageIcon);
+        JLabel textLabel = new JLabel("Admin Dashboard");
+        textLabel.setFont(new Font("Arial", Font.PLAIN, 30));
+        textLabel.setForeground(LIGHT_BROWN);
 
-        // Array of button names and corresponding icon names
-        String[] buttonNames = {
-                "Home",
-                "Employees",
-                "Departments",
-                "Products",
-                "Customers",
-                "Vendors",
-                "Customer Ledger",
-                "Graphs"
-        };
-        String[] iconNames = {
-                "home.png",
-                "employees.png",
-                "departments.png",
-                "products.png",
-                "customers.png",
-                "vendors.png",
-                "ledger.png",
-                "graphs.png"
-        };
-
-        // Create buttons and add them to the button panel
-        for (int i = 0; i < buttonNames.length; i++) {
-            JButton button = createButton(buttonNames[i], iconNames[i]);
-            buttonPanel.add(button);
-        }
-
-        return buttonPanel;
-    }
-
-    // Method to create a button with specified name and icon
-    private JButton createButton(String name, String iconName) {
-        ImageIcon icon = new ImageIcon(ASSETS_PATH + iconName);
-        JButton button = new JButton(name, icon);
-        Dimension buttonSize = new Dimension(300, 75);
-        button.setPreferredSize(buttonSize);
-        button.setBackground(LIGHT_BROWN);
-        button.setForeground(DARK_BROWN);
-        button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createLineBorder(DARK_BROWN, BORDER_THICKNESS));
-        return button;
-    }
-
-    // Method to create the main content panel
-    public JPanel createContentPanel(JPanel titlePanel, JPanel buttonPanel) {
-        JPanel contentPanel = new JPanel(new BorderLayout());
-        contentPanel.add(titlePanel, BorderLayout.NORTH);
-        contentPanel.add(buttonPanel, BorderLayout.WEST);
-        contentPanel.add(new JPanel(), BorderLayout.CENTER); // Placeholder panel for future content
-        return contentPanel;
+        // Create left panel with logo and text
+        JPanel leftPanel = new JPanel();
+        leftPanel.setBackground(DARK_BROWN);
+        leftPanel.add(imageLabel);
+        leftPanel.add(textLabel);
+        return leftPanel;
     }
 
     // Main method to run the program
