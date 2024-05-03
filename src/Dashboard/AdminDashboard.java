@@ -6,8 +6,6 @@ import java.awt.*;
 
 import Login.Login;
 
-import static Dashboard.HomePanel.createHomePanel;
-
 public class AdminDashboard extends JFrame {
     // Constants for colors, border thickness, and assets path
     public static final Color LIGHT_BROWN = Color.decode("#F2E9E2");
@@ -94,7 +92,7 @@ public class AdminDashboard extends JFrame {
     // Method to create a panel corresponding to each tab
     private JPanel createPanel(String tabName) {
         return switch (tabName) {
-            case "Home" -> createHomePanel();
+            case "Home" -> HomePanel.createHomePanel();
             case "Employees" -> EmployeePanel.createEmployeePanel();
             case "Departments" -> DepartmentPanel.createDepartmentPanel();
             case "Products" -> ProductPanel.createProductPanel();
