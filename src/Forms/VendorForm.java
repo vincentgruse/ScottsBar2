@@ -46,6 +46,12 @@ public class VendorForm extends JFrame implements ActionListener {
         ImageIcon icon = new ImageIcon("src/assets/logoSmall.png");
         setIconImage(icon.getImage());
 
+        // Calculate the center of the screen
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (screenSize.width - getWidth()) / 2;
+        int y = (screenSize.height - getHeight()) / 2;
+        setLocation(x, y);
+
         // Panel for input fields
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
