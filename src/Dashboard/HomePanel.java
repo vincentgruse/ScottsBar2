@@ -31,7 +31,7 @@ public class HomePanel {
                 "products.png",
                 "customers.png",
                 "vendors.png",
-                "ledger.png"
+                "transactions.png"
         };
         String[] formClasses = {
                 "EmployeeForm",
