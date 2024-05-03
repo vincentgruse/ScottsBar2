@@ -6,12 +6,6 @@ import java.awt.*;
 
 import Login.Login;
 
-import static Dashboard.TransactionPanel.createTransactionPanel;
-import static Dashboard.VendorPanel.createVendorPanel;
-import static Dashboard.CustomerPanel.createCustomerPanel;
-import static Dashboard.ProductPanel.createProductPanel;
-import static Dashboard.DepartmentPanel.createDepartmentPanel;
-import static Dashboard.EmployeePanel.createEmployeePanel;
 import static Dashboard.HomePanel.createHomePanel;
 
 public class AdminDashboard extends JFrame {
@@ -101,12 +95,12 @@ public class AdminDashboard extends JFrame {
     private JPanel createPanel(String tabName) {
         return switch (tabName) {
             case "Home" -> createHomePanel();
-            case "Employees" -> createEmployeePanel();
-            case "Departments" -> createDepartmentPanel();
-            case "Products" -> createProductPanel();
-            case "Customers" -> createCustomerPanel();
-            case "Vendors" -> createVendorPanel();
-            case "Transactions" -> createTransactionPanel();
+            case "Employees" -> EmployeePanel.createEmployeePanel();
+            case "Departments" -> DepartmentPanel.createDepartmentPanel();
+            case "Products" -> ProductPanel.createProductPanel();
+            case "Customers" -> CustomerPanel.createCustomerPanel();
+            case "Vendors" -> VendorPanel.createVendorPanel();
+            case "Transactions" -> TransactionPanel.createTransactionPanel();
             default -> new JPanel(); // Create empty panel for other tabs for now
         };
     }
