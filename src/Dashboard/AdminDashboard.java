@@ -1,9 +1,8 @@
 package Dashboard;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import Login.Login;
 
@@ -15,22 +14,19 @@ public class AdminDashboard extends JFrame {
     public static final Color DARK_BROWN = Color.decode("#733B38");
     public static final Color ORANGE = Color.decode("#F0C28E");
     public static final int BORDER_THICKNESS = 3;
+    public static final int TAB_WIDTH = 250; // Fixed width of the tabs
+    public static final int TAB_HEIGHT = 100; // Fixed height of the tabs
     public static final String ASSETS_PATH = "src/assets/";
 
-    private JPanel buttonPanel;
-    private JButton selectedButton;
-    private JPanel activePanel;
-    private JLabel titleLabel;
-
-    // Array of button names and corresponding icon names
-    private final String[] buttonNames = {
+    // Array of tab names and corresponding icon names
+    private final String[] tabNames = {
             "Home",
             "Employees",
             "Departments",
             "Products",
             "Customers",
             "Vendors",
-            "Customer Ledger",
+            "Transactions",
             "Graphs"
     };
 
@@ -49,21 +45,60 @@ public class AdminDashboard extends JFrame {
         ImageIcon icon = new ImageIcon("src/assets/logoSmall.png");
         setIconImage(icon.getImage());
 
-        // Create title panel and button panel
-        // Panels and buttons
+        // Create title panel
         JPanel titlePanel = createTitlePanel();
-        buttonPanel = createButtonPanel();
 
-        // Create split pane to divide the frame
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, buttonPanel, createHomePanel());
-        splitPane.setDividerLocation(300); // Set initial width of the button panel
+        // Create tabbed pane
+        JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
+        tabbedPane.setBackground(LIGHT_BROWN);
 
-        // Add title panel and split pane to the frame
+        // Set custom UI delegate for tabbed pane to customize tab appearance
+        tabbedPane.setUI(new BasicTabbedPaneUI() {
+            @Override
+            protected void installDefaults() {
+                super.installDefaults();
+                tabInsets = new Insets(10, 10, 10, 10); // Adjust tab insets
+            }
+
+            @Override
+            protected void paintTabBorder(Graphics g, int tabPlacement, int tabIndex, int x, int y, int w, int h, boolean isSelected) {
+                g.setColor(DARK_BROWN); // Set border color
+                g.drawRect(x, y, w, h); // Draw border
+            }
+
+            @Override
+            protected int calculateTabWidth(int tabPlacement, int tabIndex, FontMetrics metrics) {
+                return TAB_WIDTH; // Fixed tab width
+            }
+
+            @Override
+            protected int calculateTabHeight(int tabPlacement, int tabIndex, int fontHeight) {
+                return TAB_HEIGHT; // Fixed tab height
+            }
+        });
+
+        // Create tabs and add them to the tabbed pane
+        for (String tabName : tabNames) {
+            ImageIcon tabIcon = new ImageIcon(ASSETS_PATH + tabName.toLowerCase() + ".png");
+            tabbedPane.addTab(tabName, tabIcon, createPanel(tabName));
+        }
+
+        // Add title panel and tabbed pane to the frame
         getContentPane().add(titlePanel, BorderLayout.NORTH);
-        getContentPane().add(splitPane, BorderLayout.CENTER);
+        getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
         // Set the Home tab as active by default
-        setDefaultButton();
+        tabbedPane.setSelectedIndex(0);
+    }
+
+    // Method to create a panel corresponding to each tab
+    private JPanel createPanel(String tabName) {
+        // You can create different panels based on the tab name
+        if (tabName.equals("Home")) {
+            return createHomePanel();
+        } else {
+            return new JPanel(); // Create empty panel for now
+        }
     }
 
     // Method to create the title panel
@@ -105,76 +140,6 @@ public class AdminDashboard extends JFrame {
         leftPanel.add(imageLabel);
         leftPanel.add(textLabel);
         return leftPanel;
-    }
-
-    // Method to create the button panel
-    private JPanel createButtonPanel() {
-        JPanel buttonPanel = new JPanel(new GridLayout(8, 1, 10, -BORDER_THICKNESS));
-
-        // Array of corresponding icon names
-        String[] iconNames = {
-                "home.png",
-                "employees.png",
-                "departments.png",
-                "products.png",
-                "customers.png",
-                "vendors.png",
-                "ledger.png",
-                "graphs.png"
-        };
-
-        // Create buttons and add them to the button panel
-        for (int i = 0; i < buttonNames.length; i++) {
-            JButton button = createButton(buttonNames[i], iconNames[i]);
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JButton clickedButton = (JButton) e.getSource();
-                    System.out.println("Button clicked: " + clickedButton.getText()); // Log the clicked button text
-                    if (selectedButton != null) {
-                        selectedButton.setBackground(LIGHT_BROWN);
-                    }
-                    clickedButton.setBackground(ORANGE);
-                    selectedButton = clickedButton;
-                }
-            });
-
-            buttonPanel.add(button);
-        }
-
-        return buttonPanel;
-    }
-
-    // Method to create a button with specified name and icon
-    private JButton createButton(String name, String iconName) {
-        ImageIcon icon = new ImageIcon(ASSETS_PATH + iconName);
-        JButton button = new JButton(name, icon);
-        Dimension buttonSize = new Dimension(250, 250);
-        button.setPreferredSize(buttonSize);
-        button.setBackground(LIGHT_BROWN);
-        button.setForeground(DARK_BROWN);
-        button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Remove default border
-        return button;
-    }
-
-    // Method to set a default button as active
-    private void setDefaultButton() {
-        // Find the index of the default button
-        int defaultButtonIndex = -1;
-        for (int i = 0; i < buttonNames.length; i++) {
-            if (buttonNames[i].equals("Home")) {
-                defaultButtonIndex = i;
-                break;
-            }
-        }
-
-        // If the default button is found, set it as active
-        if (defaultButtonIndex != -1) {
-            JButton defaultButton = (JButton) buttonPanel.getComponent(defaultButtonIndex);
-            defaultButton.setBackground(Color.decode("#F0C28E"));
-            selectedButton = defaultButton;
-        }
     }
 
     // Main method to run the program
