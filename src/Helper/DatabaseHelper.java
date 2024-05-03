@@ -5,9 +5,9 @@ import java.sql.*;
 public class DatabaseHelper {
 
     // JDBC URL, username, and password of MySQL server
-    public static final String url = "jdbc:mysql://localhost:3306/mydatabase";
-    public static final String user = "username";
-    public static final String password = "password";
+    private static final String url = "jdbc:mysql://triton.towson.edu:3360/?serverTimezone=America/New_York#/mrajput1db";
+    private static final String user = "mrajput1";
+    private static final String password = "COSC*8gaw0";
 
     // JDBC variables for opening, managing and closing connection
     public static Connection connection = null;
@@ -27,14 +27,17 @@ public class DatabaseHelper {
             e.printStackTrace();
         }
         finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                    System.out.println("Connection closed!");
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+        }
+    }
+
+    public void destoryConnection() {
+        try {
+            if (connection != null) {
+                connection.close();
+                System.out.println("Connection closed!");
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

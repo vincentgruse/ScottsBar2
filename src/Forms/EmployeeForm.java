@@ -1,14 +1,22 @@
 package Forms;
 
+import Entities.Department;
+import Entities.Employee;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+
+import java.util.List;
+
+import static Helper.DatabaseHelper.setup;
 
 public class EmployeeForm extends JFrame implements ActionListener {
     // Labels
     JLabel firstNameLabel = new JLabel("First Name*:");
     JLabel lastNameLabel = new JLabel("Last Name*:");
     JLabel passwordLabel = new JLabel("Password*:");
+    JLabel ssnLabel = new JLabel("SSN*:");
     JLabel departmentLabel = new JLabel("Department*:");
     JLabel supervisorLabel = new JLabel("Supervisor*:");
 
@@ -16,13 +24,20 @@ public class EmployeeForm extends JFrame implements ActionListener {
     JTextField firstNameField = new JTextField(20);
     JTextField lastNameField = new JTextField(20);
     JPasswordField passwordField = new JPasswordField(20);
-    JTextField departmentField = new JTextField(20);
+    JPasswordField ssnField = new JPasswordField(20);
+    JComboBox<String> departmentDropdown = new JComboBox<>();
     JTextField supervisorField = new JTextField(20);
 
     // Button
     JButton signUpButton = new JButton("Submit");
 
+    List<Department> departmentList;
+    List<Employee> employeeList;
+
     public EmployeeForm() {
+
+        populateDepartments();
+        populateEmployees();
         // Setting up the frame
         setTitle("Employee Sign Up Form");
         setSize(400, 250);
@@ -66,12 +81,18 @@ public class EmployeeForm extends JFrame implements ActionListener {
 
         gbc.gridx = 0;
         gbc.gridy = 3;
-        inputPanel.add(departmentLabel, gbc);
+        inputPanel.add(ssnLabel, gbc);
         gbc.gridx = 1;
-        inputPanel.add(departmentField, gbc);
+        inputPanel.add(ssnField, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 4;
+        inputPanel.add(departmentLabel, gbc);
+        gbc.gridx = 1;
+        inputPanel.add(departmentDropdown, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 5;
         inputPanel.add(supervisorLabel, gbc);
         gbc.gridx = 1;
         inputPanel.add(supervisorField, gbc);
@@ -91,15 +112,16 @@ public class EmployeeForm extends JFrame implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
+
         if (e.getSource() == signUpButton) {
             String firstName = firstNameField.getText();
             String lastName = lastNameField.getText();
             String password = new String(passwordField.getPassword());
-            String department = departmentField.getText();
+            Integer department = departmentDropdown.getSelectedIndex();
             String supervisor = supervisorField.getText();
 
             // Check if any required field is empty
-            if (firstName.isEmpty() || lastName.isEmpty() || password.isEmpty() || department.isEmpty() || supervisor.isEmpty()) {
+            if (firstName.isEmpty() || lastName.isEmpty() || password.isEmpty() || supervisor.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "All fields are required.");
                 return;
             }
@@ -116,6 +138,9 @@ public class EmployeeForm extends JFrame implements ActionListener {
             // Generate email
             String email = username + "@scottsbar2.com";
 
+            Employee employee = new Employee();
+            employee.employeeSSN = 123;
+            employee.email = email;
             // Displaying the entered details, generated username, and email
             String message = "Username: " + username + "\n" +
                     "First Name: " + firstName + "\n" +
@@ -142,6 +167,22 @@ public class EmployeeForm extends JFrame implements ActionListener {
         return username.toLowerCase();
     }
 
+    private void populateDepartments() {
+        Department department = new Department();
+        departmentList = department.getAllDepartments();
+        for (Department dept: departmentList) {
+            departmentDropdown.addItem(dept.departmentName);
+        }
+    }
+
+    private void populateEmployees() {
+        Employee employee = new Employee();
+        employeeList = employee.getAllEmployees();
+        for (Employee emp: employeeList) {
+            departmentDropdown.addItem(emp.firstName + " " + emp.lastName);
+        }
+    }
+
     // Method to validate password
     private boolean isValidPassword(String password) {
         // Password must be 8-32 characters long and include at least one number, one capital letter, and one of the specified symbols
@@ -154,12 +195,14 @@ public class EmployeeForm extends JFrame implements ActionListener {
         firstNameField.setText("");
         lastNameField.setText("");
         passwordField.setText("");
-        departmentField.setText("");
+        departmentDropdown.setSelectedIndex(0);
         supervisorField.setText("");
     }
 
     public static void main(String[] args) {
         // Create and show the sign-up form
+        setup();
         new EmployeeForm();
+
     }
 }

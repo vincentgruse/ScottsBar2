@@ -3,8 +3,7 @@ package Graphs;
 import org.jfree.chart.*;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.ui.ApplicationFrame;
-import org.jfree.ui.RefineryUtilities;
+import org.jfree.chart.ui.ApplicationFrame;
 import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
@@ -59,7 +58,7 @@ public class Graphs extends ApplicationFrame {
         String sql = null;
 
         // TODO replace with helper class setup(), but the imports not working for some reason
-        try (Connection conn = DriverManager.getConnection(url, user, password);
+        try (Connection conn = DriverManager.getConnection("", "", "");
              Statement stmt = conn.createStatement()) {
 
             if (aggregationPeriod.equals("year")) {
@@ -91,7 +90,7 @@ public class Graphs extends ApplicationFrame {
         contentPanel.add(chartPanel, BorderLayout.CENTER);
         this.setContentPane(contentPanel);
         this.pack();
-        RefineryUtilities.centerFrameOnScreen(this);
+        //RefineryUtilities.centerFrameOnScreen(this);
         this.setVisible(true);
     }
     // This is the function from the branch with Dashboard is here only for testing
