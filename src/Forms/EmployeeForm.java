@@ -26,7 +26,8 @@ public class EmployeeForm extends JFrame implements ActionListener {
         // Setting up the frame
         setTitle("Employee Sign Up Form");
         setSize(400, 250);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // Set default close operation to dispose on close
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         // Set icon image
         ImageIcon icon = new ImageIcon("src/assets/logoSmall.png");

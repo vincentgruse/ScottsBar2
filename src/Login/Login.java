@@ -7,15 +7,17 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class Login extends JFrame implements ActionListener{
-    private JTextField usernameField;
-    private JPasswordField passwordField;
-    private JButton submitButton;
-
+    private final JTextField usernameField;
+    private final JPasswordField passwordField;
 
 
     public Login() {
         setTitle("Login Form");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        // Set icon image
+        ImageIcon icon = new ImageIcon("src/assets/logoSmall.png");
+        setIconImage(icon.getImage());
 
         // Create panel
         JPanel panel = new JPanel(new GridBagLayout());
@@ -45,7 +47,7 @@ public class Login extends JFrame implements ActionListener{
         panel.add(passwordField, gbc);
 
         // Add submit button
-        submitButton = new JButton("Submit");
+        JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(this);
         gbc.gridx = 0;
         gbc.gridy = 2;

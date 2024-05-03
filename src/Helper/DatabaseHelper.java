@@ -5,9 +5,9 @@ import java.sql.*;
 public class DatabaseHelper {
 
     // JDBC URL, username, and password of MySQL server
-    private static final String url = "jdbc:mysql://localhost:3306/mydatabase";
-    private static final String user = "username";
-    private static final String password = "password";
+    public static final String url = "jdbc:mysql://localhost:3306/mydatabase";
+    public static final String user = "username";
+    public static final String password = "password";
 
     // JDBC variables for opening, managing and closing connection
     public static Connection connection = null;

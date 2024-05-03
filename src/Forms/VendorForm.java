@@ -39,7 +39,8 @@ public class VendorForm extends JFrame implements ActionListener {
         // Setting up the frame
         setTitle("Vendor Form");
         setSize(400, 450); // Increased height to accommodate contract status label
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // Set default close operation to dispose on close
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         // Set icon image
         ImageIcon icon = new ImageIcon("src/assets/logoSmall.png");

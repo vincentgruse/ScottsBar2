@@ -26,7 +26,8 @@ public class LoyaltyMemberForm extends JFrame implements ActionListener {
         // Setting up the frame
         setTitle("New Loyalty Member Form");
         setSize(400, 300);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // Set default close operation to dispose on close
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         // Set icon image
         ImageIcon icon = new ImageIcon("src/assets/logoSmall.png");

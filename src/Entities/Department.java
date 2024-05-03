@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static src.Helper.DatabaseHelper.connection;
+import static Helper.DatabaseHelper.connection;
 
 public class Department {
     public Long departmentID;
