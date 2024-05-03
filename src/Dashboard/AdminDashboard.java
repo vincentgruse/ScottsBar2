@@ -1,12 +1,14 @@
 package Dashboard;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 
+import Forms.*;
 import Login.Login;
-
-import static Dashboard.HomePanel.createHomePanel;
 
 public class AdminDashboard extends JFrame {
     // Constants for colors, border thickness, and assets path
@@ -14,19 +16,22 @@ public class AdminDashboard extends JFrame {
     public static final Color DARK_BROWN = Color.decode("#733B38");
     public static final Color ORANGE = Color.decode("#F0C28E");
     public static final int BORDER_THICKNESS = 3;
-    public static final int TAB_WIDTH = 250; // Fixed width of the tabs
-    public static final int TAB_HEIGHT = 100; // Fixed height of the tabs
     public static final String ASSETS_PATH = "src/assets/";
 
-    // Array of tab names and corresponding icon names
-    private final String[] tabNames = {
+    // Panels and buttons
+    private JPanel titlePanel;
+    private JPanel buttonPanel;
+    private JButton selectedButton;
+
+    // Array of button names and corresponding icon names
+    private final String[] buttonNames = {
             "Home",
             "Employees",
             "Departments",
             "Products",
             "Customers",
             "Vendors",
-            "Transactions",
+            "Customer Ledger",
             "Graphs"
     };
 
@@ -38,66 +43,41 @@ public class AdminDashboard extends JFrame {
     // Method to initialize the UI components
     private void initializeUI() {
         setTitle("Admin Dashboard");
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setExtendedState(JFrame.MAXIMIZED_BOTH); // Set JFrame to fullscreen
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         // Set icon image
         ImageIcon icon = new ImageIcon("src/assets/logoSmall.png");
         setIconImage(icon.getImage());
 
-        // Create title panel
-        JPanel titlePanel = createTitlePanel();
+        // Create title panel, button panel, and content panel
+        titlePanel = createTitlePanel();
+        buttonPanel = createButtonPanel();
+        JPanel contentPanel = createContentPanel();
 
-        // Create tabbed pane
-        JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
-        tabbedPane.setBackground(LIGHT_BROWN);
-
-        // Set custom UI delegate for tabbed pane to customize tab appearance
-        tabbedPane.setUI(new BasicTabbedPaneUI() {
-            @Override
-            protected void installDefaults() {
-                super.installDefaults();
-                tabInsets = new Insets(10, 10, 10, 10); // Adjust tab insets
-            }
-
-            @Override
-            protected void paintTabBorder(Graphics g, int tabPlacement, int tabIndex, int x, int y, int w, int h, boolean isSelected) {
-                g.setColor(DARK_BROWN); // Set border color
-                g.drawRect(x, y, w, h); // Draw border
-            }
-
-            @Override
-            protected int calculateTabWidth(int tabPlacement, int tabIndex, FontMetrics metrics) {
-                return TAB_WIDTH; // Fixed tab width
-            }
-
-            @Override
-            protected int calculateTabHeight(int tabPlacement, int tabIndex, int fontHeight) {
-                return TAB_HEIGHT; // Fixed tab height
-            }
-        });
-
-        // Create tabs and add them to the tabbed pane
-        for (String tabName : tabNames) {
-            ImageIcon tabIcon = new ImageIcon(ASSETS_PATH + tabName.toLowerCase() + ".png");
-            tabbedPane.addTab(tabName, tabIcon, createPanel(tabName));
-        }
-
-        // Add title panel and tabbed pane to the frame
-        getContentPane().add(titlePanel, BorderLayout.NORTH);
-        getContentPane().add(tabbedPane, BorderLayout.CENTER);
+        // Add content panel to the frame
+        add(contentPanel);
 
         // Set the Home tab as active by default
-        tabbedPane.setSelectedIndex(0);
+        setDefaultButton();
     }
 
-    // Method to create a panel corresponding to each tab
-    private JPanel createPanel(String tabName) {
-        // You can create different panels based on the tab name
-        if (tabName.equals("Home")) {
-            return createHomePanel();
-        } else {
-            return new JPanel(); // Create empty panel for now
+    // Method to set a default button as active
+    private void setDefaultButton() {
+        // Find the index of the default button
+        int defaultButtonIndex = -1;
+        for (int i = 0; i < buttonNames.length; i++) {
+            if (buttonNames[i].equals("Home")) {
+                defaultButtonIndex = i;
+                break;
+            }
+        }
+
+        // If the default button is found, set it as active
+        if (defaultButtonIndex != -1) {
+            JButton defaultButton = (JButton) buttonPanel.getComponent(defaultButtonIndex);
+            defaultButton.setBackground(Color.decode("#F0C28E"));
+            selectedButton = defaultButton;
         }
     }
 
@@ -140,6 +120,154 @@ public class AdminDashboard extends JFrame {
         leftPanel.add(imageLabel);
         leftPanel.add(textLabel);
         return leftPanel;
+    }
+
+    // Method to create the button panel
+    private JPanel createButtonPanel() {
+        JPanel buttonPanel = new JPanel(new GridLayout(8, 1, 10, -BORDER_THICKNESS));
+
+        // Array of corresponding icon names
+        String[] iconNames = {
+                "home.png",
+                "employees.png",
+                "departments.png",
+                "products.png",
+                "customers.png",
+                "vendors.png",
+                "ledger.png",
+                "graphs.png"
+        };
+
+        // Create buttons and add them to the button panel
+        for (int i = 0; i < buttonNames.length; i++) {
+            JButton button = createButton(buttonNames[i], iconNames[i]);
+            int finalI = i;
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Change content panel content here according to the clicked button
+                    // For now, let's just print the button name
+                    System.out.println("Clicked: " + buttonNames[finalI]);
+
+                    // Change the appearance of the clicked button
+                    if (selectedButton != null) {
+                        selectedButton.setBackground(LIGHT_BROWN);
+                    }
+                    button.setBackground(ORANGE);
+                    selectedButton = button;
+                }
+            });
+            buttonPanel.add(button);
+        }
+
+        return buttonPanel;
+    }
+
+    // Method to create a button with specified name and icon
+    private JButton createButton(String name, String iconName) {
+        ImageIcon icon = new ImageIcon(ASSETS_PATH + iconName);
+        JButton button = new JButton(name, icon);
+        Dimension buttonSize = new Dimension(250, 250);
+        button.setPreferredSize(buttonSize);
+        button.setBackground(LIGHT_BROWN);
+        button.setForeground(DARK_BROWN);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Remove default border
+        return button;
+    }
+
+    // Method to create the main content panel
+    public JPanel createContentPanel() {
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        contentPanel.add(titlePanel, BorderLayout.NORTH);
+        contentPanel.add(buttonPanel, BorderLayout.WEST);
+
+        // Placeholder panel for dynamic content
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        JLabel titleLabel = new JLabel("Home");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 50)); // Setting title font
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER); // Centering the title label
+        mainPanel.add(titleLabel, BorderLayout.NORTH);
+
+        JPanel homeButtonsPanel = createHomeButtonsPanel(); // Creating the Home page buttons panel
+        mainPanel.add(homeButtonsPanel, BorderLayout.CENTER);
+
+        contentPanel.add(mainPanel, BorderLayout.CENTER);
+
+        return contentPanel;
+    }
+
+    private JPanel createHomeButtonsPanel() {
+        JPanel homeButtonsPanel = new JPanel(new GridLayout(2, 3, 10, 10)); // 2x3 grid layout for buttons
+        homeButtonsPanel.setBorder(BorderFactory.createEmptyBorder(100, 100, 100, 100)); // Add padding around the buttons
+
+        // Array of button names and corresponding icon names for the Home page
+        String[] homeButtonNames = {
+                "+Add Employee",
+                "+Add Department",
+                "+Add Product",
+                "+Add Loyalty Member",
+                "+Add Vendor",
+                "+Add Transaction"
+        };
+        String[] homeButtonIcons = {
+                "employees.png",
+                "departments.png",
+                "products.png",
+                "customers.png",
+                "vendors.png",
+                "ledger.png"
+        };
+        String[] formClasses = {
+                "EmployeeForm",
+                "DepartmentForm",
+                "ProductForm",
+                "LoyaltyMemberForm",
+                "VendorForm",
+                "TransactionForm"
+        };
+
+        // Create buttons and add them to the home buttons panel
+        for (int i = 0; i < homeButtonNames.length; i++) {
+            JButton button = createHomeButton(homeButtonNames[i], homeButtonIcons[i], formClasses[i]);
+            homeButtonsPanel.add(button);
+        }
+
+        return homeButtonsPanel;
+    }
+
+
+    private JButton createHomeButton(String name, String iconName, String formClassName) {
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/assets/" + iconName)));
+        JButton button = new JButton(name, icon);
+        button.setFont(button.getFont().deriveFont(18f));
+        Dimension buttonSize = new Dimension(250, 250);
+        button.setPreferredSize(buttonSize);
+        button.setBackground(ORANGE);
+        button.setForeground(DARK_BROWN);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createLineBorder(DARK_BROWN, BORDER_THICKNESS));
+
+        // Add action listener to open the corresponding form
+        button.addActionListener(e -> {
+            try {
+                // Dynamically create an instance of the form class
+                Class<?> formClass = Class.forName("Forms." + formClassName);
+                Object formObject = formClass.getDeclaredConstructor().newInstance();
+                if (formObject instanceof JFrame formFrame) {
+                    formFrame.setVisible(true);
+                    formFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Close only this frame on exit
+                } else {
+                    JOptionPane.showMessageDialog(null, "Invalid form class", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException |
+                     InvocationTargetException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error opening form", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        return button;
     }
 
     // Main method to run the program
