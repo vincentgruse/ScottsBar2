@@ -10,7 +10,9 @@ import java.text.ParseException;
 import java.util.Objects;
 
 public class VendorForm extends JFrame implements ActionListener {
-    // Labels
+    
+	 private static final Color BROWN = Color.decode("#8B4513");
+	// Labels
     JLabel nameLabel = new JLabel("Name*:");
     JLabel addressLabel = new JLabel("Address*:");
     JLabel addressLine2Label = new JLabel("Address Line 2:");
@@ -40,15 +42,76 @@ public class VendorForm extends JFrame implements ActionListener {
         setTitle("Vendor Form");
         setSize(400, 450); // Increased height to accommodate contract status label
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        nameLabel.setForeground(Color.RED);
-        addressLabel.setForeground(Color.RED);
-        addressLine2Label.setForeground(Color.RED);
-        cityLabel.setForeground(Color.RED);
-        zipLabel.setForeground(Color.RED);
-        stateLabel.setForeground(Color.RED);
-        emailLabel.setForeground(Color.RED);
-        phoneLabel.setForeground(Color.RED);
-        contractStatusLabel.setForeground(Color.RED);
+        nameLabel.setForeground(BROWN);
+        addressLabel.setForeground(BROWN);
+        addressLine2Label.setForeground(BROWN);
+        cityLabel.setForeground(BROWN);
+        zipLabel.setForeground(BROWN);
+        stateLabel.setForeground(BROWN);
+        emailLabel.setForeground(BROWN);
+        phoneLabel.setForeground(BROWN);
+        contractStatusLabel.setForeground(BROWN);
+        
+        
+        
+        nameField.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
+        
+        nameField.setForeground(Color.GRAY);
+        nameField.setBackground(Color.WHITE);
+        
+        nameField.setBorder(BorderFactory.createCompoundBorder(
+        		BorderFactory.createLineBorder(Color.LIGHT_GRAY),
+        		BorderFactory.createEmptyBorder(5,10,5,10)));
+        
+        addressField.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
+        addressField.setForeground(Color.GRAY);
+        addressField.setBackground(Color.WHITE);
+        
+        addressField.setBorder(BorderFactory.createCompoundBorder(
+        		BorderFactory.createLineBorder(Color.LIGHT_GRAY),
+        		BorderFactory.createEmptyBorder(5,10,5,10)));
+        
+        addressLine2Field.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
+        addressLine2Field.setForeground(Color.GRAY);
+        addressLine2Field.setBackground(Color.WHITE);
+        
+        addressLine2Field.setBorder(BorderFactory.createCompoundBorder(
+        		BorderFactory.createLineBorder(Color.LIGHT_GRAY),
+        		BorderFactory.createEmptyBorder(5,10,5,10)));
+        
+        cityField.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
+        cityField.setForeground(Color.GRAY);
+        cityField.setBackground(Color.WHITE);
+        
+        cityField.setBorder(BorderFactory.createCompoundBorder(
+        		BorderFactory.createLineBorder(Color.LIGHT_GRAY),
+        		BorderFactory.createEmptyBorder(5,10,5,10)));
+        
+        zipField.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
+        zipField.setForeground(Color.GRAY);
+        zipField.setBackground(Color.WHITE);
+        
+        zipField.setBorder(BorderFactory.createCompoundBorder(
+        		BorderFactory.createLineBorder(Color.LIGHT_GRAY),
+        		BorderFactory.createEmptyBorder(5,10,5,10)));
+       
+        emailField.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
+        emailField.setForeground(Color.GRAY);
+        emailField.setBackground(Color.WHITE);
+        
+        emailField.setBorder(BorderFactory.createCompoundBorder(
+        		BorderFactory.createLineBorder(Color.LIGHT_GRAY),
+        		BorderFactory.createEmptyBorder(5,10,5,10)));
+       
+     
+       
+        
+        
+       
+        
+       
+        
+       
         
      
         // Set icon image
@@ -58,8 +121,8 @@ public class VendorForm extends JFrame implements ActionListener {
         // Panel for input fields
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        Color lightOrange = new Color(255, 128, 0);
-        inputPanel.setBackground(lightOrange); // Set
+       
+        inputPanel.setBackground(Color.WHITE); // Set
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
@@ -144,7 +207,7 @@ public class VendorForm extends JFrame implements ActionListener {
 
         // Panel for buttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.setBackground(lightOrange);
+        buttonPanel.setBackground(Color.WHITE);
         buttonPanel.add(contractButton);
         buttonPanel.add(submitButton);
 
@@ -154,7 +217,11 @@ public class VendorForm extends JFrame implements ActionListener {
 
         // Adding action listeners to the buttons
         contractButton.addActionListener(this);
+        contractButton.setBackground(Color.RED);
+        contractButton.setForeground(Color.RED);
         submitButton.addActionListener(this);
+        submitButton.setBackground(Color.RED);
+        submitButton.setForeground(Color.RED);
 
         setVisible(true);
     }

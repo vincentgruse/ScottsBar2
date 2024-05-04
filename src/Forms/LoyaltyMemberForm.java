@@ -7,7 +7,9 @@ import java.awt.event.*;
 import java.text.ParseException;
 
 public class LoyaltyMemberForm extends JFrame implements ActionListener {
-    // Labels
+    
+	 private static final Color BROWN = Color.decode("#8B4513");
+	// Labels
     JLabel firstNameLabel = new JLabel("First Name*:");
     JLabel lastNameLabel = new JLabel("Last Name*:");
     JLabel phoneLabel = new JLabel("Phone Number*:");
@@ -27,19 +29,39 @@ public class LoyaltyMemberForm extends JFrame implements ActionListener {
         setTitle("New Loyalty Member Form");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        firstNameLabel.setForeground(Color.RED); 
-        lastNameLabel.setForeground(Color.RED);
-        phoneLabel.setForeground(Color.RED);
-        emailLabel.setForeground(Color.RED); 
+        firstNameLabel.setForeground(BROWN); 
+        lastNameLabel.setForeground(BROWN);
+        phoneLabel.setForeground(BROWN);
+        emailLabel.setForeground(BROWN); 
 
         // Set icon image
         ImageIcon icon = new ImageIcon("src/assets/logoSmall.png");
         setIconImage(icon.getImage());
+        
+        firstNameField.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
+        
+        firstNameField.setForeground(Color.GRAY);
+        firstNameField.setBackground(Color.WHITE);
+        
+        firstNameField.setBorder(BorderFactory.createCompoundBorder(
+        		BorderFactory.createLineBorder(Color.LIGHT_GRAY),
+        		BorderFactory.createEmptyBorder(5,10,5,10)));
+        
+        
+        lastNameField.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
+        lastNameField.setForeground(Color.GRAY);
+        lastNameField.setBackground(Color.WHITE);
+        
+        lastNameField.setBorder(BorderFactory.createCompoundBorder(
+        		BorderFactory.createLineBorder(Color.LIGHT_GRAY),
+        		BorderFactory.createEmptyBorder(5,10,5,10)));
+        
+        
 
         // Panel for input fields
         JPanel inputPanel = new JPanel(new GridBagLayout());
-        Color lightOrange = new Color(255, 128, 0);
-        inputPanel.setBackground(lightOrange); // Set background color to orange
+
+        inputPanel.setBackground(Color.WHITE); // Set background color to orange
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -81,14 +103,17 @@ public class LoyaltyMemberForm extends JFrame implements ActionListener {
 
         // Panel for buttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.setBackground(lightOrange);
+        buttonPanel.setBackground(Color.WHITE);
         buttonPanel.add(submitButton);
+        submitButton.setBackground(Color.RED);
+        submitButton.setForeground(Color.RED);
 
         // Add panels to the frame
         add(inputPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
 
         // Adding action listener to the button
+        
         submitButton.addActionListener(this);
 
         setVisible(true);

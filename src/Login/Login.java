@@ -8,6 +8,7 @@ public class Login extends JFrame implements ActionListener{
     private JTextField usernameField;
     private JPasswordField passwordField;
     private static final Color DARK_BROWN = Color.decode("#733B38");
+    private static final Color WHITE = Color.decode("#FFFFFF");
     private JButton submitButton;
     private static final String ASSETS_PATH = "src/assets/";
 
@@ -33,14 +34,28 @@ public class Login extends JFrame implements ActionListener{
         gbc.gridy = 0;
         panel.add(usernameLabel, gbc);
         usernameField = new JTextField(15);
-        usernameField.setText("Enter Username");
+        usernameField.setText("USERNAME");
         usernameField.setForeground(Color.GRAY);
+        
+        usernameField.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
+        
+        usernameField.setForeground(Color.GRAY);
+        usernameField.setBackground(Color.WHITE);
+        usernameField.setBorder(BorderFactory.createCompoundBorder(
+        		BorderFactory.createLineBorder(Color.LIGHT_GRAY),
+        		BorderFactory.createEmptyBorder(5,10,5,10)));
+        
+        
+        
+        
+        
+        
         // Set Text Color to Gray
         usernameField.addFocusListener(new FocusListener() {
         	@Override
         	public void focusGained(FocusEvent e)
         	{
-        		if(usernameField.getText().equals("Enter Username"))
+        		if(usernameField.getText().equals("USERNAME"))
         		{
         			usernameField.setText("");
         			usernameField.setForeground(Color.BLACK);
@@ -52,7 +67,7 @@ public class Login extends JFrame implements ActionListener{
         	{
         		if(usernameField.getText().isEmpty())
         		{
-        			usernameField.setText("Enter Username");
+        			usernameField.setText("USERNAME");
         			usernameField.setForeground(Color.GRAY);
         		}
         		
@@ -74,14 +89,14 @@ public class Login extends JFrame implements ActionListener{
         panel.add(passwordLabel, gbc);
 
         passwordField = new JPasswordField(15);
-        passwordField.setText("Enter Password");
+        passwordField.setText("PASSWORD");
         passwordField.setForeground(Color.GRAY);
         passwordField.addFocusListener(new FocusListener() {
         	
         	@Override
         	public void focusGained(FocusEvent e)
         	{
-        		if(String.valueOf(passwordField.getPassword()).equals("Enter Password"))
+        		if(String.valueOf(passwordField.getPassword()).equals("PASSWORD"))
         		{
         			passwordField.setText("");
         			passwordField.setForeground(Color.BLACK);
@@ -95,13 +110,23 @@ public class Login extends JFrame implements ActionListener{
         	{
         		if(String.valueOf(passwordField.getPassword()).isEmpty())
         		{
-        			passwordField.setText("Enter Password");
+        			passwordField.setText("PASSWORD");
         			passwordField.setForeground(Color.GRAY);
         		}
         		
         		
         	}  	
         });
+        passwordField.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
+        passwordField.setForeground(Color.GRAY);
+        passwordField.setBackground(Color.WHITE);
+        
+        passwordField.setBorder(BorderFactory.createCompoundBorder(
+        		BorderFactory.createLineBorder(Color.LIGHT_GRAY),
+        		BorderFactory.createEmptyBorder(5,10,5,10)));
+        
+        
+        
        
         gbc.gridx = 1;
         gbc.gridy = 1;
@@ -111,13 +136,12 @@ public class Login extends JFrame implements ActionListener{
         // Add submit button
         submitButton = new JButton("LOGIN");
         submitButton.addActionListener(this);
-        submitButton.setBackground(new Color(139,69,19));
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         panel.add(submitButton, gbc);
-        panel.setBackground(DARK_BROWN);
+        panel.setBackground(WHITE);
 
         
         //Create Panel for Picture

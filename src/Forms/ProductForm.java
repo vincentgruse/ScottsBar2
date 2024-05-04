@@ -9,7 +9,9 @@ import java.text.NumberFormat;
 import java.util.Objects;
 
 public class ProductForm extends JFrame implements ActionListener {
-    // Labels
+    
+	 private static final Color BROWN = Color.decode("#8B4513");
+	// Labels
     JLabel brandLabel = new JLabel("Brand*:");
     JLabel categoryLabel = new JLabel("Category*:");
     JLabel descriptionLabel = new JLabel("Description*:");
@@ -40,20 +42,20 @@ public class ProductForm extends JFrame implements ActionListener {
         ImageIcon icon = new ImageIcon("src/assets/logoSmall.png");
         setIconImage(icon.getImage());
         
-        brandLabel.setForeground(Color.RED);
-        categoryLabel.setForeground(Color.RED);
-        descriptionLabel.setForeground(Color.RED);
-        costLabel.setForeground(Color.RED);
-        srpLabel.setForeground(Color.RED);
-        vendorLabel.setForeground(Color.RED);
-        quantityLabel.setForeground(Color.RED);
+        brandLabel.setForeground(BROWN);
+        categoryLabel.setForeground(BROWN);
+        descriptionLabel.setForeground(BROWN);
+        costLabel.setForeground(BROWN);
+        srpLabel.setForeground(BROWN);
+        vendorLabel.setForeground(BROWN);
+        quantityLabel.setForeground(BROWN);
         
         
 
         // Panel for input fields
         JPanel inputPanel = new JPanel(new GridBagLayout());
-        Color lightOrange = new Color(255, 128, 0);
-        inputPanel.setBackground(lightOrange);
+     
+        inputPanel.setBackground(Color.WHITE);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -94,6 +96,8 @@ public class ProductForm extends JFrame implements ActionListener {
 
         gbc.gridx = 0;
         gbc.gridy = 1;
+        
+        
         inputPanel.add(categoryLabel, gbc);
         gbc.gridx = 1;
         inputPanel.add(categoryComboBox, gbc);
@@ -130,7 +134,9 @@ public class ProductForm extends JFrame implements ActionListener {
 
         // Panel for buttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.setBackground(lightOrange);
+        buttonPanel.setBackground(Color.WHITE);
+        submitButton.setBackground(Color.RED);
+        submitButton.setForeground(Color.RED);
         buttonPanel.add(submitButton);
 
         // Add panels to the frame

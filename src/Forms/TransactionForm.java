@@ -8,6 +8,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class TransactionForm extends JFrame implements ActionListener {
+	
+	private static final Color BROWN = Color.decode("#8B4513");
     // Labels
     JLabel timeLabel = new JLabel("Time*:");
     JLabel dateLabel = new JLabel("Date*:");
@@ -35,11 +37,11 @@ public class TransactionForm extends JFrame implements ActionListener {
         setTitle("Transaction Form");
         setSize(400, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        timeLabel.setForeground(Color.RED);
-        dateLabel.setForeground(Color.RED);
-        paymentTypeLabel.setForeground(Color.RED);
-        memberNumberLabel.setForeground(Color.RED);
-        skuLabel.setForeground(Color.RED);
+        timeLabel.setForeground(BROWN);
+        dateLabel.setForeground(BROWN);
+        paymentTypeLabel.setForeground(BROWN);
+        memberNumberLabel.setForeground(BROWN);
+        skuLabel.setForeground(BROWN);
 
         // Set icon image (replace "path_to_your_icon_image.png" with the actual path to your icon image)
         ImageIcon icon = new ImageIcon("src/assets/logoSmall.png");
@@ -98,13 +100,14 @@ public class TransactionForm extends JFrame implements ActionListener {
         gbc.gridx = 1;
         gbc.gridheight = 2; // Span two rows
         inputPanel.add(new JScrollPane(skuTextArea), gbc);
-        Color lightOrange = new Color(255, 128, 0);
-        inputPanel.setBackground(lightOrange); // Set
+        inputPanel.setBackground(Color.WHITE); // Set
 
         // Panel for buttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.add(submitButton);
-        buttonPanel.setBackground(lightOrange);
+        buttonPanel.setBackground(Color.WHITE);
+        submitButton.setBackground(Color.RED);
+        submitButton.setForeground(Color.RED);
         // Add panels to the frame
         add(inputPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
