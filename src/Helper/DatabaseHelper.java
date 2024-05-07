@@ -5,7 +5,7 @@ import java.sql.*;
 public class DatabaseHelper {
 
     // JDBC URL, username, and password of MySQL server
-    private static final String url = "jdbc:mysql://triton.towson.edu:3360/?serverTimezone=America/New_York#/mrajput1db";
+    private static final String url = "jdbc:mysql://triton.towson.edu:3360/mrajput1db";
     private static final String user = "mrajput1";
     private static final String password = "COSC*8gaw0";
 

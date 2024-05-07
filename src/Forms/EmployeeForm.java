@@ -26,6 +26,7 @@ public class EmployeeForm extends JFrame implements ActionListener {
     JPasswordField passwordField = new JPasswordField(20);
     JPasswordField ssnField = new JPasswordField(20);
     JComboBox<String> departmentDropdown = new JComboBox<>();
+    JComboBox<String> departmentEmployees = new JComboBox<>();
     JTextField supervisorField = new JTextField(20);
 
     // Button
@@ -95,7 +96,7 @@ public class EmployeeForm extends JFrame implements ActionListener {
         gbc.gridy = 5;
         inputPanel.add(supervisorLabel, gbc);
         gbc.gridx = 1;
-        inputPanel.add(supervisorField, gbc);
+        inputPanel.add(departmentEmployees, gbc);
 
         // Panel for buttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -118,10 +119,10 @@ public class EmployeeForm extends JFrame implements ActionListener {
             String lastName = lastNameField.getText();
             String password = new String(passwordField.getPassword());
             Integer department = departmentDropdown.getSelectedIndex();
-            String supervisor = supervisorField.getText();
+            Integer supervisor = departmentEmployees.getSelectedIndex();
 
             // Check if any required field is empty
-            if (firstName.isEmpty() || lastName.isEmpty() || password.isEmpty() || supervisor.isEmpty()) {
+            if (firstName.isEmpty() || lastName.isEmpty() || password.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "All fields are required.");
                 return;
             }
@@ -141,6 +142,7 @@ public class EmployeeForm extends JFrame implements ActionListener {
             Employee employee = new Employee();
             employee.employeeSSN = 123;
             employee.email = email;
+            employee.employeeSSN = departmentEmployees.getSelectedIndex();
             // Displaying the entered details, generated username, and email
             String message = "Username: " + username + "\n" +
                     "First Name: " + firstName + "\n" +
@@ -179,7 +181,7 @@ public class EmployeeForm extends JFrame implements ActionListener {
         Employee employee = new Employee();
         employeeList = employee.getAllEmployees();
         for (Employee emp: employeeList) {
-            departmentDropdown.addItem(emp.firstName + " " + emp.lastName);
+            departmentEmployees.addItem(emp.firstName + " " + emp.lastName);
         }
     }
 
@@ -196,12 +198,12 @@ public class EmployeeForm extends JFrame implements ActionListener {
         lastNameField.setText("");
         passwordField.setText("");
         departmentDropdown.setSelectedIndex(0);
-        supervisorField.setText("");
+        departmentEmployees.setSelectedIndex(0);
     }
 
     public static void main(String[] args) {
         // Create and show the sign-up form
-        setup();
+        //setup();
         new EmployeeForm();
 
     }

@@ -6,12 +6,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import static Helper.DatabaseHelper.setup;
+
 public class Login extends JFrame implements ActionListener{
     private final JTextField usernameField;
     private final JPasswordField passwordField;
 
 
     public Login() {
+        setup();
         setTitle("Login Form");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
@@ -75,7 +78,8 @@ public class Login extends JFrame implements ActionListener{
             AdminDashboard adminDashboard = new AdminDashboard();
             adminDashboard.setVisible(true);
 
-        } else {
+        }
+        else {
             JOptionPane.showMessageDialog(this, "Invalid Username or Password", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
