@@ -1,6 +1,7 @@
 package Login;
 
 import Dashboard.AdminDashboard;
+import Services.Authorization;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,9 +13,11 @@ public class Login extends JFrame implements ActionListener{
     private final JTextField usernameField;
     private final JPasswordField passwordField;
 
+    private Authorization authorization;
 
     public Login() {
         setup();
+        authorization = new Authorization();
         setTitle("Login Form");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
@@ -64,7 +67,7 @@ public class Login extends JFrame implements ActionListener{
 
     public void actionPerformed(ActionEvent e) {
         String username = usernameField.getText();
-        String password = new String(passwordField.getPassword());
+        String password = new String(passwordField.getText());
 
         // For demonstration, just print the username and password
         System.out.println("Username: " + username);
@@ -77,10 +80,17 @@ public class Login extends JFrame implements ActionListener{
 
             AdminDashboard adminDashboard = new AdminDashboard();
             adminDashboard.setVisible(true);
-
         }
         else {
-            JOptionPane.showMessageDialog(this, "Invalid Username or Password", "Error", JOptionPane.ERROR_MESSAGE);
+            if (authorization.login(username, password)) {
+                JOptionPane.showMessageDialog(this, "Login Successful!");
+                setVisible(false);
+
+                AdminDashboard adminDashboard = new AdminDashboard();
+                adminDashboard.setVisible(true);
+            }
+            else
+                JOptionPane.showMessageDialog(this, "Invalid Username or Password", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

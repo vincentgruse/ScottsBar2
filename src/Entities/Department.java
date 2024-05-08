@@ -62,9 +62,18 @@ public class Department {
         String query = "INSERT INTO Department (DeptartmentName, ManagerStartDate, ManagerEndDate, ManagerSSN) VALUES (?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, department.getDepartmentName());
-            statement.setDate(2, new java.sql.Date(department.getManagerStartDate().getTime()));
-            statement.setDate(3, department.getManagerEndDate() != null ? new java.sql.Date(department.getManagerEndDate().getTime()) : null);
-            statement.setInt(4, department.getManagerSSN());
+            if (department.getManagerStartDate() != null)
+                statement.setDate(2, new java.sql.Date(department.getManagerStartDate().getTime()));
+            else
+                statement.setDate(2, null);
+            if (department.getManagerEndDate() != null)
+                statement.setDate(3, department.getManagerEndDate() != null ? new java.sql.Date(department.getManagerEndDate().getTime()) : null);
+            else
+                statement.setDate(3, null);
+            if (department.getManagerSSN() != null)
+                statement.setInt(4, department.getManagerSSN());
+            else
+                statement.setString(4, null);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

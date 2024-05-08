@@ -17,6 +17,8 @@ public class EmployeeForm extends JFrame implements ActionListener {
     JLabel lastNameLabel = new JLabel("Last Name*:");
     JLabel passwordLabel = new JLabel("Password*:");
     JLabel ssnLabel = new JLabel("SSN*:");
+    JLabel phoneLabel = new JLabel("Phone Number*:");
+    JLabel addressLabel = new JLabel("Address*:");
     JLabel departmentLabel = new JLabel("Department*:");
     JLabel supervisorLabel = new JLabel("Supervisor*:");
 
@@ -25,9 +27,10 @@ public class EmployeeForm extends JFrame implements ActionListener {
     JTextField lastNameField = new JTextField(20);
     JPasswordField passwordField = new JPasswordField(20);
     JPasswordField ssnField = new JPasswordField(20);
+    JTextField phoneField = new JTextField(20);
+    JTextField addressField = new JTextField(20);
     JComboBox<String> departmentDropdown = new JComboBox<>();
     JComboBox<String> departmentEmployees = new JComboBox<>();
-    JTextField supervisorField = new JTextField(20);
 
     // Button
     JButton signUpButton = new JButton("Submit");
@@ -88,12 +91,24 @@ public class EmployeeForm extends JFrame implements ActionListener {
 
         gbc.gridx = 0;
         gbc.gridy = 4;
+        inputPanel.add(phoneLabel, gbc);
+        gbc.gridx = 1;
+        inputPanel.add(phoneField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        inputPanel.add(addressLabel, gbc);
+        gbc.gridx = 1;
+        inputPanel.add(addressField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 6;
         inputPanel.add(departmentLabel, gbc);
         gbc.gridx = 1;
         inputPanel.add(departmentDropdown, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 7;
         inputPanel.add(supervisorLabel, gbc);
         gbc.gridx = 1;
         inputPanel.add(departmentEmployees, gbc);
@@ -118,11 +133,12 @@ public class EmployeeForm extends JFrame implements ActionListener {
             String firstName = firstNameField.getText();
             String lastName = lastNameField.getText();
             String password = new String(passwordField.getPassword());
+            var ssn = new String(ssnField.getPassword());
             Integer department = departmentDropdown.getSelectedIndex();
             Integer supervisor = departmentEmployees.getSelectedIndex();
 
             // Check if any required field is empty
-            if (firstName.isEmpty() || lastName.isEmpty() || password.isEmpty()) {
+            if (firstName.isEmpty() || lastName.isEmpty() || password.isEmpty() || ssn.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "All fields are required.");
                 return;
             }
@@ -135,14 +151,27 @@ public class EmployeeForm extends JFrame implements ActionListener {
 
             // Generate username
             String username = generateUsername(firstName, lastName);
-
             // Generate email
             String email = username + "@scottsbar2.com";
 
             Employee employee = new Employee();
-            employee.employeeSSN = 123;
+            employee.employeeSSN = Integer.valueOf(ssn);
+            employee.phoneNumber = phoneField.getText();
+            employee.firstName = firstName;
+            employee.lastName = lastName;
+            employee.username = username;
+            employee.empAddress = addressField.getText();
             employee.email = email;
-            employee.employeeSSN = departmentEmployees.getSelectedIndex();
+            employee.passwd = password;
+            var deptNum = departmentList.get(departmentDropdown.getSelectedIndex()).departmentID;
+            employee.deptID = deptNum;
+            Integer superSSN = null;
+            if (departmentEmployees.getSelectedIndex() != -1
+                    && departmentEmployees.getSelectedIndex() != 0)
+                 superSSN = employeeList.get(departmentEmployees.getSelectedIndex()).employeeSSN;
+            employee.supervisorSSN = superSSN;
+
+            employee.insertEmployee(employee);
             // Displaying the entered details, generated username, and email
             String message = "Username: " + username + "\n" +
                     "First Name: " + firstName + "\n" +
@@ -155,6 +184,7 @@ public class EmployeeForm extends JFrame implements ActionListener {
 
             // Clearing the fields
             clearFields();
+            setVisible(false);
         }
     }
 
@@ -180,8 +210,12 @@ public class EmployeeForm extends JFrame implements ActionListener {
     private void populateEmployees() {
         Employee employee = new Employee();
         employeeList = employee.getAllEmployees();
+        employeeList.add(0, null);
         for (Employee emp: employeeList) {
-            departmentEmployees.addItem(emp.firstName + " " + emp.lastName);
+            if (emp != null)
+                departmentEmployees.addItem(emp.firstName + " " + emp.lastName);
+            else
+                departmentEmployees.addItem("");
         }
     }
 

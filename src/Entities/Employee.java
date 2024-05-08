@@ -133,12 +133,15 @@ public class Employee {
             statement.setString(3, employee.getLastName());
             statement.setString(4, employee.getUsername());
             statement.setString(5, hashPassword(employee.getPasswd()));
-            statement.setDate(6, new java.sql.Date(employee.getStartDate().getTime()));
+            statement.setDate(6, new java.sql.Date(new Date().getTime()));
             statement.setDate(7, employee.getEndDate() != null ? new java.sql.Date(employee.getEndDate().getTime()) : null);
             statement.setString(8, employee.getEmail());
             statement.setString(9, employee.getPhoneNumber());
             statement.setString(10, employee.getEmpAddress());
-            statement.setInt(11, employee.getSupervisorSSN());
+            if (employee.supervisorSSN != null)
+                statement.setInt(11, employee.getSupervisorSSN());
+            else
+                statement.setString(11, null);
             statement.setLong(12, employee.getDeptID());
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -182,9 +185,62 @@ public class Employee {
         return null;
     }
 
+    public Employee getEmployeeByUsername(String username) {
+        String query = "SELECT * FROM Employee WHERE Username = ?";
+        try (PreparedStatement statement = DatabaseHelper.connection.prepareStatement(query)) {
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                Employee employee = new Employee();
+                employee.setEmployeeSSN(resultSet.getInt("EmployeeSSN"));
+                employee.setFirstName(resultSet.getString("FirstName"));
+                employee.setLastName(resultSet.getString("LastName"));
+                employee.setUsername(resultSet.getString("Username"));
+                employee.setStartDate(resultSet.getDate("StartDate"));
+                employee.setEndDate(resultSet.getDate("EndDate"));
+                employee.setEmail(resultSet.getString("Email"));
+                employee.setPhoneNumber(resultSet.getString("PhoneNumber"));
+                employee.setEmpAddress(resultSet.getString("EmpAddress"));
+                employee.setSupervisorSSN(resultSet.getInt("SupervisorSSN"));
+                employee.setDeptID(resultSet.getLong("DeptID"));
+                employee.setPasswd(resultSet.getString("Passwd"));
+                return employee;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public List<Employee> getAllEmployees() {
         List<Employee> employees = new ArrayList<>();
         String query = "SELECT * FROM Employee";
+        try (PreparedStatement statement = DatabaseHelper.connection.prepareStatement(query)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Employee employee = new Employee();
+                employee.setEmployeeSSN(resultSet.getInt("EmployeeSSN"));
+                employee.setFirstName(resultSet.getString("FirstName"));
+                employee.setLastName(resultSet.getString("LastName"));
+                employee.setUsername(resultSet.getString("Username"));
+                employee.setStartDate(resultSet.getDate("StartDate"));
+                employee.setEndDate(resultSet.getDate("EndDate"));
+                employee.setEmail(resultSet.getString("Email"));
+                employee.setPhoneNumber(resultSet.getString("PhoneNumber"));
+                employee.setEmpAddress(resultSet.getString("EmpAddress"));
+                employee.setSupervisorSSN(resultSet.getInt("SupervisorSSN"));
+                employee.setDeptID(resultSet.getLong("DeptID"));
+                employees.add(employee);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return employees;
+    }
+
+    public List<Employee> getAllEmployeesJoined() {
+        List<Employee> employees = new ArrayList<>();
+        String query = "SELECT e.*,d.*,se.FirstName as SupervisorFName, se.LastName as SupervisorLName FROM Employee e JOIN Department d on e.DeptId = d.DepartmentID LEFT JOIN Employee se ON e.EmployeeSSN = se.SupervisorSSN";
         try (PreparedStatement statement = DatabaseHelper.connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -228,4 +284,5 @@ public class Employee {
             e.printStackTrace();
         }
     }
+
 }

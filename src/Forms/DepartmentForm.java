@@ -1,8 +1,14 @@
 package Forms;
 
+import Entities.Department;
+import Entities.Employee;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
+
+import static Helper.DatabaseHelper.setup;
 
 public class DepartmentForm extends JFrame implements ActionListener {
     // Labels
@@ -11,12 +17,15 @@ public class DepartmentForm extends JFrame implements ActionListener {
 
     // Text fields
     JTextField nameField = new JTextField(20);
-    JTextField supervisorField = new JTextField(20);
+    JComboBox<String> departmentEmployees = new JComboBox<>();
 
     // Button
     JButton submitButton = new JButton("Submit");
 
+    List<Employee> employeeList;
+
     public DepartmentForm() {
+        populateEmployees();
         // Setting up the frame
         setTitle("Department Form");
         setSize(400, 250);
@@ -50,7 +59,7 @@ public class DepartmentForm extends JFrame implements ActionListener {
         gbc.gridy = 1;
         inputPanel.add(supervisorLabel, gbc);
         gbc.gridx = 1;
-        inputPanel.add(supervisorField, gbc);
+        inputPanel.add(departmentEmployees, gbc);
 
         // Panel for buttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -69,14 +78,22 @@ public class DepartmentForm extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == submitButton) {
             String department = nameField.getText();
-            String supervisor = supervisorField.getText();
+            Integer supervisor = departmentEmployees.getSelectedIndex();
 
             // Check if any required field is empty
-            if (department.isEmpty() || supervisor.isEmpty()) {
+            if (department.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "All fields are required.");
                 return;
             }
 
+            Department departmentModel = new Department();
+            departmentModel.departmentName = department;
+            Integer ssn = null;
+            if (departmentEmployees.getSelectedIndex() != -1
+                    && departmentEmployees.getSelectedIndex() != 0)
+                ssn = employeeList.get(departmentEmployees.getSelectedIndex()).employeeSSN;
+            departmentModel.managerSSN = ssn;
+            departmentModel.insertDepartment(departmentModel);
             // Displaying the entered details
             String message = "Department: " + department + "\n" +
                     "Supervisor: " + supervisor + "\n";
@@ -85,13 +102,25 @@ public class DepartmentForm extends JFrame implements ActionListener {
 
             // Clearing the fields
             clearFields();
+            setVisible(false);
+        }
+    }
+
+    private void populateEmployees() {
+        Employee employee = new Employee();
+        employeeList = employee.getAllEmployees();
+        employeeList.add(0, null);
+        for (Employee emp: employeeList) {
+            if (emp != null)
+                departmentEmployees.addItem(emp.firstName + " " + emp.lastName);
+            else
+                departmentEmployees.addItem("");
         }
     }
 
     // Method to clear text fields
     public void clearFields() {
         nameField.setText("");
-        supervisorField.setText("");
     }
 
     public static void main(String[] args) {
