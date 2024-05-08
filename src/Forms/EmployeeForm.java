@@ -136,8 +136,8 @@ public class EmployeeForm extends JFrame implements ActionListener {
             String lastName = lastNameField.getText();
             String password = new String(passwordField.getPassword());
             var ssn = new String(ssnField.getPassword());
-            Integer department = departmentDropdown.getSelectedIndex();
-            Integer supervisor = departmentEmployees.getSelectedIndex();
+            int department = departmentDropdown.getSelectedIndex();
+            int supervisor = departmentEmployees.getSelectedIndex();
 
             // Check if any required field is empty
             if (firstName.isEmpty() || lastName.isEmpty() || password.isEmpty() || ssn.isEmpty()) {
@@ -166,8 +166,7 @@ public class EmployeeForm extends JFrame implements ActionListener {
             employee.empAddress = addressField.getText();
             employee.email = email;
             employee.passwd = password;
-            var deptNum = departmentList.get(departmentDropdown.getSelectedIndex()).departmentID;
-            employee.deptID = deptNum;
+            employee.deptID = departmentList.get(departmentDropdown.getSelectedIndex()).departmentID;
             Integer superSSN = null;
             if (departmentEmployees.getSelectedIndex() != -1
                     && departmentEmployees.getSelectedIndex() != 0)
@@ -213,7 +212,7 @@ public class EmployeeForm extends JFrame implements ActionListener {
     private void populateEmployees() {
         Employee employee = new Employee();
         employeeList = employee.getAllEmployees();
-        employeeList.add(0, null);
+        employeeList.addFirst(null);
         for (Employee emp: employeeList) {
             if (emp != null)
                 departmentEmployees.addItem(emp.firstName + " " + emp.lastName);
