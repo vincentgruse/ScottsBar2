@@ -1,5 +1,7 @@
 package Dashboard;
 
+import Entities.Department;
+import Entities.Employee;
 import Forms.DepartmentForm;
 
 import javax.swing.*;
@@ -10,6 +12,7 @@ import java.util.Arrays;
 import java.util.Vector;
 
 public class DepartmentPanel {
+    private static Department department = new Department();
     // Method to create the Department panel
     public static JPanel createDepartmentPanel() {
         JPanel departmentPanel = new JPanel(new GridBagLayout());
@@ -77,16 +80,16 @@ public class DepartmentPanel {
 
         Vector<Vector<String>> data = new Vector<>();
         // Sample data entries
-        data.add(new Vector<>(Arrays.asList("1", "Engineering", "5", "John Doe", "Edit")));
-        data.add(new Vector<>(Arrays.asList("2", "Marketing", "7", "Jane Smith", "Edit")));
-        data.add(new Vector<>(Arrays.asList("3", "HR", "3", "Alice Johnson", "Edit")));
-        data.add(new Vector<>(Arrays.asList("4", "Finance", "4", "Bob Williams", "Edit")));
-        data.add(new Vector<>(Arrays.asList("5", "Operations", "6", "Charlie Brown", "Edit")));
-        data.add(new Vector<>(Arrays.asList("6", "Sales", "8", "Emily Davis", "Edit")));
-        data.add(new Vector<>(Arrays.asList("7", "IT", "5", "David Clark", "Edit")));
-        data.add(new Vector<>(Arrays.asList("8", "Customer Service", "4", "Samantha Green", "Edit")));
-        data.add(new Vector<>(Arrays.asList("9", "Research and Development", "3", "Michael Lee", "Edit")));
-        data.add(new Vector<>(Arrays.asList("10", "Quality Assurance", "5", "Jessica Scott", "Edit")));
+//        data.add(new Vector<>(Arrays.asList("1", "Engineering", "5", "John Doe", "Edit")));
+//        data.add(new Vector<>(Arrays.asList("2", "Marketing", "7", "Jane Smith", "Edit")));
+//        data.add(new Vector<>(Arrays.asList("3", "HR", "3", "Alice Johnson", "Edit")));
+//        data.add(new Vector<>(Arrays.asList("4", "Finance", "4", "Bob Williams", "Edit")));
+//        data.add(new Vector<>(Arrays.asList("5", "Operations", "6", "Charlie Brown", "Edit")));
+//        data.add(new Vector<>(Arrays.asList("6", "Sales", "8", "Emily Davis", "Edit")));
+//        data.add(new Vector<>(Arrays.asList("7", "IT", "5", "David Clark", "Edit")));
+//        data.add(new Vector<>(Arrays.asList("8", "Customer Service", "4", "Samantha Green", "Edit")));
+//        data.add(new Vector<>(Arrays.asList("9", "Research and Development", "3", "Michael Lee", "Edit")));
+//        data.add(new Vector<>(Arrays.asList("10", "Quality Assurance", "5", "Jessica Scott", "Edit")));
 
         return new DefaultTableModel(data, columns);
     }

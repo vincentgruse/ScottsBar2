@@ -2,6 +2,7 @@ package Dashboard;
 
 import Entities.Employee;
 import Forms.EmployeeForm;
+import Models.EmployeeDepartment;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -80,22 +81,10 @@ public class EmployeePanel {
         ));
 
         Vector<Vector<String>> data = new Vector<>();
-        var employeeList = employee.getAllEmployees();
-        for(Employee emp: employeeList) {
-            data.add(new Vector(Arrays.asList(emp.employeeSSN, emp.firstName + " "+emp.lastName, emp.email, emp.username, emp.startDate, emp.endDate, "", "", "Edit")));
+        var employeeList = employee.getAllEmployeesJoined();
+        for(EmployeeDepartment emp: employeeList) {
+            data.add(new Vector(Arrays.asList(emp.employeeSSN, emp.firstName + " "+emp.lastName, emp.email, emp.username, emp.startDate, emp.endDate, emp.DepartmentName, emp.SupervisorName, "Edit")));
         }
-        // Sample data entries
-//        data.add(new Vector<>(Arrays.asList("1", "John Doe", "john@example.com", "johndoe",  "$50,000", "2022-01-01", "2023-01-01", "Engineering", "Jane Smith", "Edit")));
-//        data.add(new Vector<>(Arrays.asList("2", "Jane Smith", "jane@example.com", "janesmith", "password2", "$60,000", "2022-02-01", "2023-02-01", "Marketing", "John Doe", "Edit")));
-//        data.add(new Vector<>(Arrays.asList("3", "Alice Johnson", "alice@example.com", "alicejohnson", "password3", "$55,000", "2022-03-01", "2023-03-01", "HR", "Bob Williams", "Edit")));
-//        data.add(new Vector<>(Arrays.asList("4", "Bob Williams", "bob@example.com", "bobwilliams", "password4", "$65,000", "2022-04-01", "2023-04-01", "Finance", "Alice Johnson", "Edit")));
-//        data.add(new Vector<>(Arrays.asList("5", "Charlie Brown", "charlie@example.com", "charliebrown", "password5", "$45,000", "2022-05-01", "2023-05-01", "Operations", "Emily Davis", "Edit")));
-//        data.add(new Vector<>(Arrays.asList("6", "Emily Davis", "emily@example.com", "emilydavis", "password6", "$75,000", "2022-06-01", "2023-06-01", "Sales", "Charlie Brown", "Edit")));
-//        data.add(new Vector<>(Arrays.asList("7", "David Clark", "david@example.com", "davidclark", "password7", "$70,000", "2022-07-01", "2023-07-01", "Engineering", "Samantha Green", "Edit")));
-//        data.add(new Vector<>(Arrays.asList("8", "Samantha Green", "samantha@example.com", "samanthagreen", "password8", "$80,000", "2022-08-01", "2023-08-01", "Marketing", "David Clark", "Edit")));
-//        data.add(new Vector<>(Arrays.asList("9", "Michael Lee", "michael@example.com", "michaellee", "password9", "$65,000", "2022-09-01", "2023-09-01", "HR", "Jessica Scott", "Edit")));
-//        data.add(new Vector<>(Arrays.asList("10", "Jessica Scott", "jessica@example.com", "jessicascott", "password10", "$55,000", "2022-10-01", "2023-10-01", "Finance", "Michael Lee", "Edit")));
-
         return new DefaultTableModel(data, columns);
     }
 

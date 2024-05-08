@@ -1,6 +1,7 @@
 package Entities;
 
 import Helper.DatabaseHelper;
+import Models.EmployeeDepartment;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -238,13 +239,13 @@ public class Employee {
         return employees;
     }
 
-    public List<Employee> getAllEmployeesJoined() {
-        List<Employee> employees = new ArrayList<>();
-        String query = "SELECT e.*,d.*,se.FirstName as SupervisorFName, se.LastName as SupervisorLName FROM Employee e JOIN Department d on e.DeptId = d.DepartmentID LEFT JOIN Employee se ON e.EmployeeSSN = se.SupervisorSSN";
+    public List<EmployeeDepartment> getAllEmployeesJoined() {
+        List<EmployeeDepartment> employees = new ArrayList<>();
+        String query = "SELECT e.*,d.DeptartmentName as DepartmentName,se.FirstName as SupervisorFName, se.LastName as SupervisorLName FROM Employee e JOIN Department d on e.DeptId = d.DepartmentID LEFT JOIN Employee se ON e.EmployeeSSN = se.SupervisorSSN";
         try (PreparedStatement statement = DatabaseHelper.connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Employee employee = new Employee();
+                EmployeeDepartment employee = new EmployeeDepartment();
                 employee.setEmployeeSSN(resultSet.getInt("EmployeeSSN"));
                 employee.setFirstName(resultSet.getString("FirstName"));
                 employee.setLastName(resultSet.getString("LastName"));
@@ -256,6 +257,8 @@ public class Employee {
                 employee.setEmpAddress(resultSet.getString("EmpAddress"));
                 employee.setSupervisorSSN(resultSet.getInt("SupervisorSSN"));
                 employee.setDeptID(resultSet.getLong("DeptID"));
+                employee.DepartmentName = resultSet.getString("DepartmentName");
+                employee.SupervisorName = resultSet.getString("SupervisorFName") +" "+ resultSet.getString("SupervisorLName");
                 employees.add(employee);
             }
         } catch (SQLException e) {
