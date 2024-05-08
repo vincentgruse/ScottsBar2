@@ -42,9 +42,10 @@ public class EmployeeForm extends JFrame implements ActionListener {
 
         populateDepartments();
         populateEmployees();
+
         // Setting up the frame
         setTitle("Employee Sign Up Form");
-        setSize(400, 250);
+        setSize(400, 400);
         // Set default close operation to dispose on close
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -64,7 +65,7 @@ public class EmployeeForm extends JFrame implements ActionListener {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(10, 0, 0, 0);
 
         // Add components to input panel
         inputPanel.add(firstNameLabel, gbc);
@@ -120,6 +121,7 @@ public class EmployeeForm extends JFrame implements ActionListener {
         // Add panels to the frame
         add(inputPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
         // Adding action listener to the button
         signUpButton.addActionListener(this);
@@ -151,6 +153,7 @@ public class EmployeeForm extends JFrame implements ActionListener {
 
             // Generate username
             String username = generateUsername(firstName, lastName);
+
             // Generate email
             String email = username + "@scottsbar2.com";
 
@@ -239,6 +242,5 @@ public class EmployeeForm extends JFrame implements ActionListener {
         // Create and show the sign-up form
         //setup();
         new EmployeeForm();
-
     }
 }
