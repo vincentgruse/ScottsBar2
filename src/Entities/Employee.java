@@ -241,7 +241,7 @@ public class Employee {
 
     public List<EmployeeDepartment> getAllEmployeesJoined() {
         List<EmployeeDepartment> employees = new ArrayList<>();
-        String query = "SELECT e.*,d.DeptartmentName as DepartmentName,se.FirstName as SupervisorFName, se.LastName as SupervisorLName FROM Employee e JOIN Department d on e.DeptId = d.DepartmentID LEFT JOIN Employee se ON e.EmployeeSSN = se.SupervisorSSN";
+        String query = "SELECT e1.*,d.DeptartmentName as DepartmentName,se.FirstName as SupervisorFName, se.LastName as SupervisorLName FROM Employee e1 JOIN Department d on e1.DeptId = d.DepartmentID LEFT JOIN Employee se ON e1.SupervisorSSN = se.EmployeeSSN";
         try (PreparedStatement statement = DatabaseHelper.connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {

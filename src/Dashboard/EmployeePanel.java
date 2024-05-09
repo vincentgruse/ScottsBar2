@@ -53,10 +53,18 @@ public class EmployeePanel {
         JButton addButton = new JButton("Edit Employee");
         addButton.setFont(new Font("Arial", Font.PLAIN, 20));
 
+        JButton deleteButton = new JButton("Delete Employee");
+        deleteButton.setFont(new Font("Arial", Font.PLAIN, 20));
+        deleteButton.setBackground(Color.RED);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 1; // Reset gridwidth
+        employeePanel.add(deleteButton, gbc);
 
         // Adding button to the panel
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         gbc.gridwidth = 1; // Reset gridwidth
         employeePanel.add(addButton, gbc);
 
@@ -72,10 +80,17 @@ public class EmployeePanel {
         employeeTable.getTableHeader().setReorderingAllowed(false);
         employeeTable.setAutoCreateRowSorter(true);
 
+        deleteButton.addActionListener(e -> {
+            DefaultTableModel datamodel = (DefaultTableModel) employeeTable.getModel();
+            int deleteIdx = employeeTable.getSelectedRow();
+            var ssnVal = datamodel.getValueAt(deleteIdx, 0);
+            employee.deleteEmployee(Integer.valueOf(ssnVal.toString()));
+            datamodel.removeRow(deleteIdx);
+        });
+
         addButton.addActionListener(e -> {
             DefaultTableModel datamodel = (DefaultTableModel) employeeTable.getModel();
             int rowCount = datamodel.getRowCount();
-            int columnCount = datamodel.getColumnCount();
 
             for (int row = 0; row < rowCount; row++) {
                 Object ssnVal = datamodel.getValueAt(row, 0);
@@ -131,7 +146,7 @@ public class EmployeePanel {
         Vector<Vector<String>> data = new Vector<>();
         var employeeList = employee.getAllEmployeesJoined();
         for(EmployeeDepartment emp: employeeList) {
-            data.add(new Vector(Arrays.asList(emp.employeeSSN, emp.firstName, emp.lastName, emp.email, emp.username, emp.startDate, emp.endDate, emp.phoneNumber, emp.DepartmentName+"("+emp.deptID+")", emp.SupervisorName+"("+emp.supervisorSSN+")")));
+            data.add(new Vector(Arrays.asList(emp.employeeSSN, emp.firstName, emp.lastName, emp.email, emp.username, emp.startDate, emp.endDate != null ? emp.endDate : "", emp.phoneNumber, emp.DepartmentName+"("+emp.deptID+")", emp.SupervisorName+"("+emp.supervisorSSN+")")));
         }
         return new DefaultTableModel(data, columns);
     }
