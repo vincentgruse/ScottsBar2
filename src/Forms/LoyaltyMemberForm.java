@@ -6,6 +6,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.text.ParseException;
 
+import Entities.LoyaltyMember;
+import Entities.Customer;
+
 public class LoyaltyMemberForm extends JFrame implements ActionListener {
     // Labels
     JLabel firstNameLabel = new JLabel("First Name*:");
@@ -120,6 +123,17 @@ public class LoyaltyMemberForm extends JFrame implements ActionListener {
                 return;
             }
 
+            Customer customer = new Customer();
+            long customerId = customer.insertCustomer(customer);
+
+            LoyaltyMember loyaltyMember = new LoyaltyMember();
+            loyaltyMember.customerID = customerId;
+            loyaltyMember.firstName = firstName;
+            loyaltyMember.lastName = lastName;
+            loyaltyMember.email = email;
+            loyaltyMember.phoneNumber = phoneNumber;
+            loyaltyMember.insertLoyaltyMember(loyaltyMember);
+
             // Submission successful
             String message = "New loyalty member submitted successfully!\n\n" +
                     "First Name: " + firstName + "\n" +
@@ -127,6 +141,10 @@ public class LoyaltyMemberForm extends JFrame implements ActionListener {
                     "Phone Number: " + phoneNumber + "\n" +
                     "Email: " + email + "\n";
             JOptionPane.showMessageDialog(this, message);
+
+
+
+
 
             // Clear fields
             clearFields();

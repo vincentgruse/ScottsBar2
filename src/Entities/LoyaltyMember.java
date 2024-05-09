@@ -56,6 +56,7 @@ public class LoyaltyMember {
         this.phoneNumber = phoneNumber;
     }
 
+
     public void insertLoyaltyMember(LoyaltyMember loyaltyMember) {
         String query = "INSERT INTO LoyaltyMember (CustomerID, FirstName, LastName, Email, PhoneNumber) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {

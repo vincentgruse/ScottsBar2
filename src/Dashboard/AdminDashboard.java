@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import java.awt.*;
 
+import Helper.DatabaseHelper;
 import Login.Login;
 
 public class AdminDashboard extends JFrame {
@@ -99,6 +100,7 @@ public class AdminDashboard extends JFrame {
             case "Customers" -> CustomerPanel.createCustomerPanel();
             case "Vendors" -> VendorPanel.createVendorPanel();
             case "Transactions" -> TransactionPanel.createTransactionPanel();
+            case "Graphs" -> GraphPanel.createGraphPanel();
             default -> new JPanel(); // Create empty panel for other tabs for now
         };
     }
@@ -147,6 +149,7 @@ public class AdminDashboard extends JFrame {
 
     // Main method to run the program
     public static void main(String[] args) {
+        DatabaseHelper.setup(); // TODO This was added so follow on uses of connection aren't null
         SwingUtilities.invokeLater(() -> {
             new AdminDashboard().setVisible(true); // Create and show the admin dashboard frame
         });
