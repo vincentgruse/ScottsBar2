@@ -1,5 +1,6 @@
 package Graphs;
 
+import Helper.DatabaseHelper;
 import org.jfree.chart.*;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -17,12 +18,13 @@ import static Helper.DatabaseHelper.*;
 
 /*
 -----------------------------------------------------------------------------------------------------
-Have a couple of things I still need to change, but if connected to teh database it works
+Fully functioning graphs
 -----------------------------------------------------------------------------------------------------
  */
 
 
 public class Graphs extends ApplicationFrame {
+
 
     // JDBC URL, username, and password of MySQL server
 
@@ -57,27 +59,28 @@ public class Graphs extends ApplicationFrame {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         String sql = null;
 
-        // TODO replace with helper class setup(), but the imports not working for some reason
-        try (Connection conn = DriverManager.getConnection("", "", "");
-             Statement stmt = conn.createStatement()) {
+        DatabaseHelper.setup();
 
-            if (aggregationPeriod.equals("year")) {
-                sql = yearRevenueSQLQuery(type);
+        if (DatabaseHelper.connection != null) {
+            // connection statement is just enabling SQL executions
+            try (Statement stmt = DatabaseHelper.connection.createStatement()) {
+                if (aggregationPeriod.equals("year")) {
+                    sql = yearRevenueSQLQuery(type);
+                } else if (aggregationPeriod.equals("month")) {
+                    sql = monthRevenueSQLQuery(type);
+                }
+
+                ResultSet results = stmt.executeQuery(sql);
+                while (results.next()) {
+                    String period = results.getString(aggregationPeriod.equals("year") ? "Year" : "Month");
+                    double value = results.getDouble("Value");
+                    dataset.addValue(value, type, period);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-            if (aggregationPeriod.equals("month")) {
-                sql = monthRevenueSQLQuery(type);
-            }
-
-            ResultSet results = stmt.executeQuery(sql);
-
-            while (results.next()) {
-                String period = results.getString(aggregationPeriod.equals("year") ? "Year" : "Month");
-                double value = results.getDouble("Value");
-                dataset.addValue(value, type, period);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } else {
+            System.err.println("Could not connect to the database");
         }
         return dataset;
     }
@@ -94,6 +97,7 @@ public class Graphs extends ApplicationFrame {
         this.setVisible(true);
     }
     // This is the function from the branch with Dashboard is here only for testing
+    // and can be pulled in from another class - or not cause it works as is
     private JPanel createContentPanel(JPanel titlePanel, JPanel buttonPanel) {
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.add(titlePanel, BorderLayout.NORTH);
