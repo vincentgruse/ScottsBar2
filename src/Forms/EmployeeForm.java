@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import java.util.Date;
 import java.util.List;
 
 import static Helper.DatabaseHelper.setup;
@@ -164,6 +165,7 @@ public class EmployeeForm extends JFrame implements ActionListener {
             employee.lastName = lastName;
             employee.username = username;
             employee.empAddress = addressField.getText();
+            employee.startDate = new Date();
             employee.email = email;
             employee.passwd = password;
             employee.deptID = departmentList.get(departmentDropdown.getSelectedIndex()).departmentID;
@@ -179,7 +181,7 @@ public class EmployeeForm extends JFrame implements ActionListener {
                     "First Name: " + firstName + "\n" +
                     "Last Name: " + lastName + "\n" +
                     "Email: " + email + "\n" +
-                    "Department: " + department + "\n" +
+                    "Department: " + department+1 + "\n" +
                     "Supervisor: " + supervisor + "\n";
 
             JOptionPane.showMessageDialog(this, message);

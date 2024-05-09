@@ -3,6 +3,7 @@ package Dashboard;
 import Entities.Department;
 import Entities.Employee;
 import Forms.DepartmentForm;
+import Models.DepartmentManager;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -79,6 +80,11 @@ public class DepartmentPanel {
         ));
 
         Vector<Vector<String>> data = new Vector<>();
+        var deptList = department.getAllDepartmentsJoined();
+        for (DepartmentManager dept: deptList) {
+            data.add(new Vector(Arrays.asList(dept.departmentID, dept.departmentName, "5", dept.ManagerName, "Edit")));
+        }
+
         // Sample data entries
 //        data.add(new Vector<>(Arrays.asList("1", "Engineering", "5", "John Doe", "Edit")));
 //        data.add(new Vector<>(Arrays.asList("2", "Marketing", "7", "Jane Smith", "Edit")));

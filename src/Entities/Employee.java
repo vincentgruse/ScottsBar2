@@ -258,7 +258,9 @@ public class Employee {
                 employee.setSupervisorSSN(resultSet.getInt("SupervisorSSN"));
                 employee.setDeptID(resultSet.getLong("DeptID"));
                 employee.DepartmentName = resultSet.getString("DepartmentName");
-                employee.SupervisorName = resultSet.getString("SupervisorFName") +" "+ resultSet.getString("SupervisorLName");
+                var superFName = resultSet.getString("SupervisorFName") != null ? resultSet.getString("SupervisorFName") : "";
+                var superLName = resultSet.getString("SupervisorLName") != null ? resultSet.getString("SupervisorLName") : "";
+                employee.SupervisorName = superFName +" "+ superLName;
                 employees.add(employee);
             }
         } catch (SQLException e) {
@@ -268,20 +270,33 @@ public class Employee {
     }
 
     public void updateEmployee(Employee employee) {
-        String query = "UPDATE Employee SET FirstName = ?, LastName = ?, Username = ?, Passwd = ?, StartDate = ?, EndDate = ?, Email = ?, PhoneNumber = ?, EmpAddress = ?, SupervisorSSN = ?, DeptID = ? WHERE EmployeeSSN = ?";
+        String query = "UPDATE Employee SET FirstName = ?, LastName = ?, Username = ?, StartDate = ?, EndDate = ?, Email = ?, PhoneNumber = ?, EmpAddress = ?, SupervisorSSN = ?, DeptID = ? WHERE EmployeeSSN = ?";
         try (PreparedStatement statement = DatabaseHelper.connection.prepareStatement(query)) {
             statement.setString(1, employee.getFirstName());
             statement.setString(2, employee.getLastName());
             statement.setString(3, employee.getUsername());
-            statement.setString(4, hashPassword(employee.getPasswd()));
-            statement.setDate(5, new java.sql.Date(employee.getStartDate().getTime()));
-            statement.setDate(6, employee.getEndDate() != null ? new java.sql.Date(employee.getEndDate().getTime()) : null);
-            statement.setString(7, employee.getEmail());
-            statement.setString(8, employee.getPhoneNumber());
-            statement.setString(9, employee.getEmpAddress());
-            statement.setInt(10, employee.getSupervisorSSN());
-            statement.setLong(11, employee.getDeptID());
-            statement.setInt(12, employee.getEmployeeSSN());
+            statement.setDate(4, new java.sql.Date(employee.getStartDate().getTime()));
+            statement.setDate(5, employee.getEndDate() != null ? new java.sql.Date(employee.getEndDate().getTime()) : null);
+            statement.setString(6, employee.getEmail());
+            statement.setString(7, employee.getPhoneNumber());
+            statement.setString(8, employee.getEmpAddress());
+            if (employee.supervisorSSN != null)
+                statement.setInt(9, employee.getSupervisorSSN());
+            else
+                statement.setString(9, null);
+            statement.setLong(10, employee.getDeptID());
+            statement.setInt(11, employee.getEmployeeSSN());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updatePassword(String newPassword, Integer ssn) {
+        String query = "UPDATE Employee SET Passwd = ? WHERE EmployeeSSN = ?";
+        try (PreparedStatement statement = DatabaseHelper.connection.prepareStatement(query)) {
+            statement.setString(1, hashPassword(newPassword));
+            statement.setInt(2, ssn);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -6,6 +6,7 @@ import Entities.Employee;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Date;
 import java.util.List;
 
 import static Helper.DatabaseHelper.setup;
@@ -90,8 +91,11 @@ public class DepartmentForm extends JFrame implements ActionListener {
             departmentModel.departmentName = department;
             Integer ssn = null;
             if (departmentEmployees.getSelectedIndex() != -1
-                    && departmentEmployees.getSelectedIndex() != 0)
+                    && departmentEmployees.getSelectedIndex() != 0) {
                 ssn = employeeList.get(departmentEmployees.getSelectedIndex()).employeeSSN;
+                departmentModel.managerStartDate = new Date();
+            }
+
             departmentModel.managerSSN = ssn;
             departmentModel.insertDepartment(departmentModel);
             // Displaying the entered details

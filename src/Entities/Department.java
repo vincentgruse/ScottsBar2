@@ -1,5 +1,7 @@
 package Entities;
 
+import Models.DepartmentManager;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -122,6 +124,27 @@ public class Department {
                 department.setManagerStartDate(resultSet.getDate("ManagerStartDate"));
                 department.setManagerEndDate(resultSet.getDate("ManagerEndDate"));
                 department.setManagerSSN(resultSet.getInt("ManagerSSN"));
+                departments.add(department);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return departments;
+    }
+
+    public List<DepartmentManager> getAllDepartmentsJoined() {
+        List<DepartmentManager> departments = new ArrayList<>();
+        String query = "select d.*,e.FirstName as ManagerFName, e.LastName as ManagerLName from Department d LEFT JOIN Employee e ON d.ManagerSSN = e.EmployeeSSN";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                DepartmentManager department = new DepartmentManager();
+                department.setDepartmentID(resultSet.getLong("DepartmentID"));
+                department.setDepartmentName(resultSet.getString("DeptartmentName"));
+                department.setManagerStartDate(resultSet.getDate("ManagerStartDate"));
+                department.setManagerEndDate(resultSet.getDate("ManagerEndDate"));
+                department.setManagerSSN(resultSet.getInt("ManagerSSN"));
+                department.ManagerName = resultSet.getString("ManagerFName") != null ? resultSet.getString("ManagerFName"): "" + " " + resultSet.getString("ManagerLName") != null ? resultSet.getString("ManagerLName"): "";
                 departments.add(department);
             }
         } catch (SQLException e) {
