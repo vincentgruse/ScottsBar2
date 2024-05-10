@@ -12,10 +12,9 @@ public class Category {
     public Long categoryID;
     public String categoryTitle;
 
-    public void insertVendor(Category category) {
-        String query = "INSERT INTO Category (VendorName, VendorAddress, VendorPhoneNumber, VendorEmail) VALUES (?, ?, ?, ?)";
+    public void insertCategory(Category category) {
+        String query = "INSERT INTO Category (CategoryTitle) VALUES (?)";
         try (PreparedStatement statement = DatabaseHelper.connection.prepareStatement(query)) {
-            statement.setLong(1, category.categoryID);
             statement.setString(2, category.categoryTitle);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -23,7 +22,7 @@ public class Category {
         }
     }
 
-    public void deleteVendor(long categoryID) {
+    public void deleteCategory(long categoryID) {
         String query = "DELETE FROM Category WHERE CategoryID = ?";
         try (PreparedStatement statement = DatabaseHelper.connection.prepareStatement(query)) {
             statement.setLong(1, categoryID);
@@ -33,7 +32,7 @@ public class Category {
         }
     }
 
-    public Category getVendorById(long categoryID) {
+    public Category getCategoryById(long categoryID) {
         String query = "SELECT * FROM Category WHERE CategoryID = ?";
         try (PreparedStatement statement = DatabaseHelper.connection.prepareStatement(query)) {
             statement.setLong(1, categoryID);
@@ -50,7 +49,7 @@ public class Category {
         return null;
     }
 
-    public List<Category> getAllVendors() {
+    public List<Category> getAllCategories() {
         List<Category> categories = new ArrayList<>();
         String query = "SELECT * FROM Category";
         try (PreparedStatement statement = DatabaseHelper.connection.prepareStatement(query)) {

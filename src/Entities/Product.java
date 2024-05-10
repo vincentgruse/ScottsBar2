@@ -1,5 +1,7 @@
 package Entities;
 
+import Models.ProductCategoryVendor;
+
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -149,6 +151,31 @@ public class Product {
                 product.setDiscount(resultSet.getBigDecimal("Discount"));
                 product.setVendorID(resultSet.getLong("VendorID"));
                 product.setCategoryID(resultSet.getLong("CategoryID"));
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    public List<ProductCategoryVendor> getAllProductsJoined() {
+        List<ProductCategoryVendor> products = new ArrayList<>();
+        String query = "SELECT p.*,v.VendorName,c.CategoryTitle FROM Product p, Vendor v, Category c WHERE p.VendorID = v.VendorID AND p.CategoryID = c.CategoryID";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                ProductCategoryVendor product = new ProductCategoryVendor();
+                product.setSKU(resultSet.getString("SKU"));
+                product.setProductName(resultSet.getString("ProductName"));
+                product.setStock(resultSet.getInt("Stock"));
+                product.setProductDescription(resultSet.getString("ProductDescription"));
+                product.setUnitPrice(resultSet.getBigDecimal("UnitPrice"));
+                product.setDiscount(resultSet.getBigDecimal("Discount"));
+                product.setVendorID(resultSet.getLong("VendorID"));
+                product.setCategoryID(resultSet.getLong("CategoryID"));
+                product.VendorName = resultSet.getString("VendorName");
+                product.CategoryTitle = resultSet.getString("CategoryTitle");
                 products.add(product);
             }
         } catch (SQLException e) {

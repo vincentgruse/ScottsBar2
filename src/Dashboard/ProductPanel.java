@@ -1,15 +1,29 @@
 package Dashboard;
 
+import Entities.Department;
+import Entities.Employee;
+import Entities.Product;
 import Forms.ProductForm;
+import Models.EmployeeDepartment;
+import Models.ProductCategoryVendor;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Vector;
 
 public class ProductPanel {
+    private static Product product = new Product();
+    static JTable productTable = new JTable();
+    static JScrollPane scrollPane = new JScrollPane(productTable);
+
     // Method to create the Products panel
     public static JPanel createProductPanel() {
         JPanel productsPanel = new JPanel(new GridBagLayout());
@@ -30,10 +44,6 @@ public class ProductPanel {
         gbc.gridwidth = 2; // Span across two columns
         productsPanel.add(titleLabel, gbc);
 
-        // Adding table to display product information
-        JTable productTable = new JTable();
-        JScrollPane scrollPane = new JScrollPane(productTable);
-
         // Adding scroll pane to the panel
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -41,21 +51,91 @@ public class ProductPanel {
         productsPanel.add(scrollPane, gbc);
 
         // Adding "+Add Product" button
-        JButton addButton = new JButton("+Add Product");
+        JButton addButton = new JButton("+Edit Product");
         addButton.setFont(new Font("Arial", Font.PLAIN, 20));
         addButton.addActionListener(e -> {
-            // Open the ProductForm to add a new product
-            ProductForm productForm = new ProductForm();
-            productForm.setVisible(true);
+            DefaultTableModel datamodel = (DefaultTableModel) productTable.getModel();
+            int rowCount = datamodel.getRowCount();
+            for (int row = 0; row < rowCount; row++) {
+                Object skuVal = datamodel.getValueAt(row, 0);
+                Object pnameVal = datamodel.getValueAt(row, 1);
+                Object pdescVal = datamodel.getValueAt(row, 2);
+                Object costVal = datamodel.getValueAt(row, 3);
+                Object stockVal = datamodel.getValueAt(row, 4);
+                Object discountVal = datamodel.getValueAt(row, 5);
+                Object categoryVal = datamodel.getValueAt(row, 6);
+                Object vendorVal = datamodel.getValueAt(row, 8);
+                Product data = new Product();
+                data.setSKU(skuVal.toString());
+                data.productName = pnameVal.toString();
+                data.productDescription = pdescVal.toString();
+                data.unitPrice = BigDecimal.valueOf(Double.parseDouble(costVal.toString()));
+                data.discount = BigDecimal.valueOf(Double.parseDouble(discountVal.toString()));
+                data.stock = Integer.valueOf(stockVal.toString());
+                data.categoryID = Long.valueOf(categoryVal.toString());
+                data.vendorID = Long.valueOf(vendorVal.toString());
+                //deptData.managerSSN = superVal.toString() != null && superVal.toString() != "" ? Integer.valueOf(superVal.toString()) : null;
+                product.updateProduct(data);
+            }
+            RefreshTables();
         });
+
+        JButton deleteButton = new JButton("Delete Product");
+        deleteButton.setFont(new Font("Arial", Font.PLAIN, 20));
+        deleteButton.setBackground(Color.RED);
+
+        deleteButton.addActionListener(e -> {
+            DefaultTableModel datamodel = (DefaultTableModel) productTable.getModel();
+            int deleteIdx = productTable.getSelectedRow();
+            var skuVal = datamodel.getValueAt(deleteIdx, 0);
+            product.deleteProduct(skuVal.toString());
+            datamodel.removeRow(deleteIdx);
+        });
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 1; // Reset gridwidth
+        productsPanel.add(deleteButton, gbc);
 
         // Adding button to the panel
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         gbc.gridwidth = 1; // Reset gridwidth
         productsPanel.add(addButton, gbc);
 
         // Populate table with sample product data
+        RefreshTables();
+        return productsPanel;
+    }
+
+    private static DefaultTableModel getDefaultTableModel() {
+        Vector<String> columns = new Vector<>(Arrays.asList(
+                "SKU", "Name", "Description", "Cost", "Stock", "Discount",
+                "Category ID", "Category", "Vendor ID", "Vendor"
+        ));
+
+        Vector<Vector<String>> data = new Vector<>();
+        var productList = product.getAllProductsJoined();
+        for(ProductCategoryVendor prod: productList) {
+            data.add(new Vector(Arrays.asList(prod.getSKU(), prod.getProductName(), prod.getProductDescription(),
+                    prod.unitPrice, prod.stock, prod.discount, prod.categoryID, prod.CategoryTitle, prod.vendorID, prod.VendorName)));
+        }
+        return new DefaultTableModel(data, columns){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                switch (column) {
+                    case 0:
+                    case 7:
+                    case 9:
+                        return false;
+                    default:
+                        return true;
+                }
+            }
+        };
+    }
+
+    public static void RefreshTables() {
         DefaultTableModel model = getDefaultTableModel();
         productTable.setModel(model);
 
@@ -66,29 +146,5 @@ public class ProductPanel {
         // Display sort arrows in the table header
         productTable.getTableHeader().setReorderingAllowed(false);
         productTable.setAutoCreateRowSorter(true);
-
-        return productsPanel;
-    }
-
-    private static DefaultTableModel getDefaultTableModel() {
-        Vector<String> columns = new Vector<>(Arrays.asList(
-                "SKU", "Brand", "Description", "Category", "Cost",
-                "SRP", "Vendor", "Stock", "Discount", "Action"
-        ));
-
-        Vector<Vector<String>> data = new Vector<>();
-        // Sample data entries
-        data.add(new Vector<>(Arrays.asList("SKU001", "Brand A", "Product A", "Category X", "$10.00", "$20.00", "Vendor X", "100", "5%", "Edit")));
-        data.add(new Vector<>(Arrays.asList("SKU002", "Brand B", "Product B", "Category Y", "$15.00", "$25.00", "Vendor Y", "150", "10%", "Edit")));
-        data.add(new Vector<>(Arrays.asList("SKU003", "Brand C", "Product C", "Category Z", "$20.00", "$30.00", "Vendor Z", "200", "15%", "Edit")));
-        data.add(new Vector<>(Arrays.asList("SKU004", "Brand D", "Product D", "Category X", "$25.00", "$35.00", "Vendor X", "120", "8%", "Edit")));
-        data.add(new Vector<>(Arrays.asList("SKU005", "Brand E", "Product E", "Category Y", "$30.00", "$40.00", "Vendor Y", "180", "12%", "Edit")));
-        data.add(new Vector<>(Arrays.asList("SKU006", "Brand F", "Product F", "Category Z", "$35.00", "$45.00", "Vendor Z", "220", "20%", "Edit")));
-        data.add(new Vector<>(Arrays.asList("SKU007", "Brand G", "Product G", "Category X", "$40.00", "$50.00", "Vendor X", "90", "6%", "Edit")));
-        data.add(new Vector<>(Arrays.asList("SKU008", "Brand H", "Product H", "Category Y", "$45.00", "$55.00", "Vendor Y", "140", "11%", "Edit")));
-        data.add(new Vector<>(Arrays.asList("SKU009", "Brand I", "Product I", "Category Z", "$50.00", "$60.00", "Vendor Z", "160", "18%", "Edit")));
-        data.add(new Vector<>(Arrays.asList("SKU010", "Brand J", "Product J", "Category X", "$55.00", "$65.00", "Vendor X", "130", "9%", "Edit")));
-
-        return new DefaultTableModel(data, columns);
     }
 }
