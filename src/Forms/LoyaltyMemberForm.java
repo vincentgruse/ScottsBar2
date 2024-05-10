@@ -143,9 +143,6 @@ public class LoyaltyMemberForm extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(this, message);
 
 
-
-
-
             // Clear fields
             clearFields();
         }

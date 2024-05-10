@@ -3,6 +3,7 @@ package Entities;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,21 +21,24 @@ public class Customer {
 
     public long insertCustomer(Customer customer) {
         String query = "INSERT INTO Customer () VALUES ()";
-        String getCustomerIdQuery = "SELECT LAST_INSERT_ID()";
         long customerId = 0;
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+
+        try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            // Execute the insert operation
             statement.executeUpdate();
 
-            try(PreparedStatement statementId = connection.prepareStatement(getCustomerIdQuery);
-                ResultSet resultSet = statementId.executeQuery()) {
-                if( resultSet.next()){
-                    customerId = resultSet.getInt(1);
+            // Retrieve the generated keys
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    // Get the first column of the ResultSet which contains the auto-incremented ID
+                    customerId = generatedKeys.getLong(1);
                 }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        // Return the auto-generated customer ID
         return customerId;
     }
 
