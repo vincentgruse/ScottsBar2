@@ -19,6 +19,10 @@ import javax.swing.table.TableRowSorter;
 
 public class EmployeePanel {
     private static Employee employee = new Employee();
+    // Adding table to display employee information
+    static JTable employeeTable = new JTable();
+    static JScrollPane scrollPane = new JScrollPane(employeeTable);
+
     // Method to create the Employee panel
     public static JPanel createEmployeePanel() {
         JPanel employeePanel = new JPanel(new GridBagLayout());
@@ -38,10 +42,6 @@ public class EmployeePanel {
         gbc.gridy = 0;
         gbc.gridwidth = 2; // Span across two columns
         employeePanel.add(titleLabel, gbc);
-
-        // Adding table to display employee information
-        JTable employeeTable = new JTable();
-        JScrollPane scrollPane = new JScrollPane(employeeTable);
 
         // Adding scroll pane to the panel
         gbc.gridx = 0;
@@ -69,16 +69,7 @@ public class EmployeePanel {
         employeePanel.add(addButton, gbc);
 
         // Populate table with sample employee data
-        DefaultTableModel model = getDefaultTableModel();
-        employeeTable.setModel(model);
-
-        // Enable sorting for each column
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
-        employeeTable.setRowSorter(sorter);
-
-        // Display sort arrows in the table header
-        employeeTable.getTableHeader().setReorderingAllowed(false);
-        employeeTable.setAutoCreateRowSorter(true);
+        RefreshTables();
 
         deleteButton.addActionListener(e -> {
             DefaultTableModel datamodel = (DefaultTableModel) employeeTable.getModel();
@@ -131,16 +122,8 @@ public class EmployeePanel {
                     empData.supervisorSSN = null;
                 employee.updateEmployee(empData);
             }
-            DefaultTableModel model2 = getDefaultTableModel();
-            employeeTable.setModel(model2);
-
-            // Enable sorting for each column
-            TableRowSorter sorter2 = new TableRowSorter<>(model);
-            employeeTable.setRowSorter(sorter2);
-
-            // Display sort arrows in the table header
-            employeeTable.getTableHeader().setReorderingAllowed(false);
-            employeeTable.setAutoCreateRowSorter(true);
+            RefreshTables();
+            DepartmentPanel.RefreshTables();
         });
 
         return employeePanel;
@@ -170,6 +153,19 @@ public class EmployeePanel {
                 }
             }
         };
+    }
+
+    public static void RefreshTables() {
+        DefaultTableModel model = getDefaultTableModel();
+        employeeTable.setModel(model);
+
+        // Enable sorting for each column
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        employeeTable.setRowSorter(sorter);
+
+        // Display sort arrows in the table header
+        employeeTable.getTableHeader().setReorderingAllowed(false);
+        employeeTable.setAutoCreateRowSorter(true);
     }
 
 }

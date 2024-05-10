@@ -18,6 +18,8 @@ import java.util.Vector;
 
 public class DepartmentPanel {
     private static Department department = new Department();
+    static JTable departmentTable = new JTable();
+    static JScrollPane scrollPane = new JScrollPane(departmentTable);
     // Method to create the Department panel
     public static JPanel createDepartmentPanel() {
         JPanel departmentPanel = new JPanel(new GridBagLayout());
@@ -39,8 +41,6 @@ public class DepartmentPanel {
         departmentPanel.add(titleLabel, gbc);
 
         // Adding table to display department information
-        JTable departmentTable = new JTable();
-        JScrollPane scrollPane = new JScrollPane(departmentTable);
 
         // Adding scroll pane to the panel
         gbc.gridx = 0;
@@ -97,16 +97,8 @@ public class DepartmentPanel {
                 deptData.managerSSN = superVal.toString() != null && superVal.toString() != "" ? Integer.valueOf(superVal.toString()) : null;
                 department.updateDepartment(deptData);
             }
-            DefaultTableModel model = getDefaultTableModel();
-            departmentTable.setModel(model);
-
-            // Enable sorting for each column
-            TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
-            departmentTable.setRowSorter(sorter);
-
-            // Display sort arrows in the table header
-            departmentTable.getTableHeader().setReorderingAllowed(false);
-            departmentTable.setAutoCreateRowSorter(true);
+            RefreshTables();
+            EmployeePanel.RefreshTables();
         });
 
         // Adding button to the panel
@@ -116,16 +108,7 @@ public class DepartmentPanel {
         departmentPanel.add(addButton, gbc);
 
         // Populate table with sample department data
-        DefaultTableModel model = getDefaultTableModel();
-        departmentTable.setModel(model);
-
-        // Enable sorting for each column
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
-        departmentTable.setRowSorter(sorter);
-
-        // Display sort arrows in the table header
-        departmentTable.getTableHeader().setReorderingAllowed(false);
-        departmentTable.setAutoCreateRowSorter(true);
+        RefreshTables();
 
         return departmentPanel;
     }
@@ -154,5 +137,18 @@ public class DepartmentPanel {
                 }
             }
         };
+    }
+
+    public static void RefreshTables () {
+        DefaultTableModel model = getDefaultTableModel();
+        departmentTable.setModel(model);
+
+        // Enable sorting for each column
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        departmentTable.setRowSorter(sorter);
+
+        // Display sort arrows in the table header
+        departmentTable.getTableHeader().setReorderingAllowed(false);
+        departmentTable.setAutoCreateRowSorter(true);
     }
 }
