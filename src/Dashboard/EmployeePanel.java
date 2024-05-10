@@ -131,6 +131,16 @@ public class EmployeePanel {
                     empData.supervisorSSN = null;
                 employee.updateEmployee(empData);
             }
+            DefaultTableModel model2 = getDefaultTableModel();
+            employeeTable.setModel(model2);
+
+            // Enable sorting for each column
+            TableRowSorter sorter2 = new TableRowSorter<>(model);
+            employeeTable.setRowSorter(sorter2);
+
+            // Display sort arrows in the table header
+            employeeTable.getTableHeader().setReorderingAllowed(false);
+            employeeTable.setAutoCreateRowSorter(true);
         });
 
         return employeePanel;
@@ -148,7 +158,18 @@ public class EmployeePanel {
         for(EmployeeDepartment emp: employeeList) {
             data.add(new Vector(Arrays.asList(emp.employeeSSN, emp.firstName, emp.lastName, emp.email, emp.username, emp.startDate, emp.endDate != null ? emp.endDate : "", emp.phoneNumber, emp.DepartmentName+"("+emp.deptID+")", emp.SupervisorName+"("+emp.supervisorSSN+")")));
         }
-        return new DefaultTableModel(data, columns);
+        return new DefaultTableModel(data, columns){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                switch (column) {
+                    case 0:
+                    case 4:
+                        return false;
+                    default:
+                        return true;
+                }
+            }
+        };
     }
 
 }

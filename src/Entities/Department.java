@@ -134,7 +134,7 @@ public class Department {
 
     public List<DepartmentManager> getAllDepartmentsJoined() {
         List<DepartmentManager> departments = new ArrayList<>();
-        String query = "select d.*,e.FirstName as ManagerFName, e.LastName as ManagerLName from Department d LEFT JOIN Employee e ON d.ManagerSSN = e.EmployeeSSN";
+        String query = "select d.DepartmentID, d.DeptartmentName, d.ManagerStartDate, d.ManagerEndDate, d.ManagerSSN, e.FirstName as ManagerFName, e.LastName as ManagerLName, COUNT(e2.EmployeeSSN) as EmployeeCount from Department d LEFT JOIN Employee e on d.ManagerSSN = e.EmployeeSSN LEFT JOIN Employee e2 ON d.DepartmentID = e2.DeptId GROUP BY d.DepartmentID, d.DeptartmentName, d.ManagerStartDate, d.ManagerEndDate, d.ManagerSSN, e.FirstName, e.LastName";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -144,7 +144,10 @@ public class Department {
                 department.setManagerStartDate(resultSet.getDate("ManagerStartDate"));
                 department.setManagerEndDate(resultSet.getDate("ManagerEndDate"));
                 department.setManagerSSN(resultSet.getInt("ManagerSSN"));
-                department.ManagerName = resultSet.getString("ManagerFName") != null ? resultSet.getString("ManagerFName"): "" + " " + resultSet.getString("ManagerLName") != null ? resultSet.getString("ManagerLName"): "";
+                var managerFirstName = resultSet.getString("ManagerFName") != null ? resultSet.getString("ManagerFName"): "";
+                var managerLastName = resultSet.getString("ManagerLName") != null ? resultSet.getString("ManagerLName"): "";
+                department.ManagerName = managerFirstName + " " + managerLastName;
+                department.EmployeeCount = resultSet.getInt("EmployeeCount");
                 departments.add(department);
             }
         } catch (SQLException e) {

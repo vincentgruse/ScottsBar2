@@ -9,7 +9,11 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Vector;
 
 public class DepartmentPanel {
@@ -44,18 +48,70 @@ public class DepartmentPanel {
         gbc.gridwidth = 2; // Span across two columns
         departmentPanel.add(scrollPane, gbc);
 
+        JButton deleteButton = new JButton("Delete Department");
+        deleteButton.setFont(new Font("Arial", Font.PLAIN, 20));
+        deleteButton.setBackground(Color.RED);
+        deleteButton.addActionListener(e -> {
+            DefaultTableModel datamodel = (DefaultTableModel) departmentTable.getModel();
+            int deleteIdx = departmentTable.getSelectedRow();
+            var deptIdVal = datamodel.getValueAt(deleteIdx, 0);
+            department.deleteDepartment(Integer.valueOf(deptIdVal.toString()));
+            datamodel.removeRow(deleteIdx);
+        });
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 1; // Reset gridwidth
+        departmentPanel.add(deleteButton, gbc);
+
         // Adding "+Add Department" button
-        JButton addButton = new JButton("+Add Department");
+        JButton addButton = new JButton("+Edit Departments");
         addButton.setFont(new Font("Arial", Font.PLAIN, 20));
         addButton.addActionListener(e -> {
             // Open the DepartmentForm to add a new department
-            DepartmentForm departmentForm = new DepartmentForm();
-            departmentForm.setVisible(true);
+            DefaultTableModel datamodel = (DefaultTableModel) departmentTable.getModel();
+            int rowCount = datamodel.getRowCount();
+
+            for (int row = 0; row < rowCount; row++) {
+                Object deptIdVal = datamodel.getValueAt(row, 0);
+                Object dnameVal = datamodel.getValueAt(row, 1);
+                Object startDateVal = datamodel.getValueAt(row, 5);
+                Object endDateVal = datamodel.getValueAt(row, 6);
+                Object superVal = datamodel.getValueAt(row, 3);
+                Department deptData = new Department();
+                deptData.departmentID = Long.valueOf(deptIdVal.toString());
+                deptData.departmentName = dnameVal.toString();
+                try {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    if (startDateVal != null && startDateVal.toString() != "") {
+                        LocalDate localStartDate = LocalDate.parse(startDateVal.toString(), formatter);
+                        deptData.managerStartDate = Date.from(localStartDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    }
+                    if (endDateVal != null && endDateVal.toString() != "") {
+                        LocalDate localEndDate = LocalDate.parse(endDateVal.toString(), formatter);
+                        deptData.managerEndDate = Date.from(localEndDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    }
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+                deptData.managerSSN = superVal.toString() != null && superVal.toString() != "" ? Integer.valueOf(superVal.toString()) : null;
+                department.updateDepartment(deptData);
+            }
+            DefaultTableModel model = getDefaultTableModel();
+            departmentTable.setModel(model);
+
+            // Enable sorting for each column
+            TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+            departmentTable.setRowSorter(sorter);
+
+            // Display sort arrows in the table header
+            departmentTable.getTableHeader().setReorderingAllowed(false);
+            departmentTable.setAutoCreateRowSorter(true);
         });
 
         // Adding button to the panel
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         gbc.gridwidth = 1; // Reset gridwidth
         departmentPanel.add(addButton, gbc);
 
@@ -76,27 +132,27 @@ public class DepartmentPanel {
 
     private static DefaultTableModel getDefaultTableModel() {
         Vector<String> columns = new Vector<>(Arrays.asList(
-                "Department ID", "Name", "Number of Employees", "Supervisor", "Action"
+                "Department ID", "Name", "Number of Employees", "Manager SSN", "Manager Name",
+                "Manager Start Date", "Manager End Date"
         ));
 
         Vector<Vector<String>> data = new Vector<>();
         var deptList = department.getAllDepartmentsJoined();
         for (DepartmentManager dept: deptList) {
-            data.add(new Vector(Arrays.asList(dept.departmentID, dept.departmentName, "5", dept.ManagerName, "Edit")));
+            data.add(new Vector(Arrays.asList(dept.departmentID, dept.departmentName, dept.EmployeeCount, dept.managerSSN, dept.ManagerName, dept.managerStartDate != null ? dept.managerStartDate:"", dept.managerEndDate != null ? dept.managerEndDate:"")));
         }
-
-        // Sample data entries
-//        data.add(new Vector<>(Arrays.asList("1", "Engineering", "5", "John Doe", "Edit")));
-//        data.add(new Vector<>(Arrays.asList("2", "Marketing", "7", "Jane Smith", "Edit")));
-//        data.add(new Vector<>(Arrays.asList("3", "HR", "3", "Alice Johnson", "Edit")));
-//        data.add(new Vector<>(Arrays.asList("4", "Finance", "4", "Bob Williams", "Edit")));
-//        data.add(new Vector<>(Arrays.asList("5", "Operations", "6", "Charlie Brown", "Edit")));
-//        data.add(new Vector<>(Arrays.asList("6", "Sales", "8", "Emily Davis", "Edit")));
-//        data.add(new Vector<>(Arrays.asList("7", "IT", "5", "David Clark", "Edit")));
-//        data.add(new Vector<>(Arrays.asList("8", "Customer Service", "4", "Samantha Green", "Edit")));
-//        data.add(new Vector<>(Arrays.asList("9", "Research and Development", "3", "Michael Lee", "Edit")));
-//        data.add(new Vector<>(Arrays.asList("10", "Quality Assurance", "5", "Jessica Scott", "Edit")));
-
-        return new DefaultTableModel(data, columns);
+        return new DefaultTableModel(data, columns) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                switch (column) {
+                    case 0:
+                    case 2:
+                    case 4:
+                        return false;
+                    default:
+                        return true;
+                }
+            }
+        };
     }
 }
