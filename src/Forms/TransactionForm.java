@@ -8,13 +8,17 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.List;
 
 import Entities.Customer;
 import Entities.TransactionProducts;
 import Entities.Transactions;
 import Entities.Employee;
+import Entities.Product;
+
+import java.math.RoundingMode;
+
 
 public class TransactionForm extends JFrame implements ActionListener {
     // Labels
@@ -207,29 +211,30 @@ public class TransactionForm extends JFrame implements ActionListener {
                 return;
             }
 
-            // Validate SKUs
-            boolean hasValidSKU = false; // Check for at least one valid SKU
+            // Validate SKUs with database call
+            // The method isn't static so can use product object to fill it with data in roundabout way
+            Product productHelper = new Product();
             StringBuilder invalidSkus = new StringBuilder("Invalid SKU(s):");
+            boolean allSkusValid = true;
 
+            // Check each SKU to see if it exists in the database
             for (JTextField skuField : skuFields) {
                 String trimmedSku = skuField.getText().trim();
-                if (!trimmedSku.isEmpty()) {
-                    if (trimmedSku.length() < 8 || trimmedSku.length() > 12 || !trimmedSku.matches("[a-zA-Z0-9]+")) {
+                if (trimmedSku.isEmpty()) {
+                    // Directly append to invalid SKUs if empty
+                    allSkusValid = false;
+                    invalidSkus.append("\n").append("SKU is cannot be empty");
+                } else {
+                    Product product = productHelper.getProductBySKU(trimmedSku);
+                    if (product == null) {
+                        allSkusValid = false;
                         invalidSkus.append("\n").append(trimmedSku);
-                    } else {
-                        hasValidSKU = true;
                     }
                 }
             }
 
-            // If they leave all fields empty
-            if (!hasValidSKU && invalidSkus.toString().equals("Invalid SKU(s):")) {
-                JOptionPane.showMessageDialog(this, "At least one valid SKU is required.");
-                return;
-            }
-
-            // If there are invalid SKUs
-            if (invalidSkus.length() > "Invalid SKU(s):".length()) { // More content than just the title
+            // If any SKU is invalid, show an error message and do not proceed
+            if (!allSkusValid) {
                 JOptionPane.showMessageDialog(this, invalidSkus.toString());
                 return;
             }
@@ -252,10 +257,11 @@ public class TransactionForm extends JFrame implements ActionListener {
                 employeeSSN = employeeList.get(departmentEmployees.getSelectedIndex()).employeeSSN;
             }
 
+            BigDecimal total = calculateTotalPrice();
+
             // For database TransactionProducts
             // If the customer is not a member, then we must insert another
             // blank value for a new customerID, then use that for the transaction table
-
 
 
             // Display transaction details
@@ -266,7 +272,9 @@ public class TransactionForm extends JFrame implements ActionListener {
             message.append("Payment Type: ").append(paymentType).append("\n");
             message.append("Member #: ").append(memberNumber).append("\n");
             message.append("Overall Discount: ").append(overallDiscount).append("\n");
+            message.append("Total: $ ").append(total).append("\n");
             message.append("SKU(s):\n");
+
             for (JTextField skuField : skuFields) {
                 message.append("- ").append(skuField.getText().trim()).append("\n");
             }
@@ -281,6 +289,7 @@ public class TransactionForm extends JFrame implements ActionListener {
             transaction.paymentMethod = paymentType;
             transaction.employeeSSN = employeeSSN;
             transaction.customerID = customerId;
+            transaction.total = total;
             long transactionID = transaction.insertTransaction(transaction);
 
 
@@ -304,9 +313,6 @@ public class TransactionForm extends JFrame implements ActionListener {
                     transactionProductsList.add(transactionProduct);
                 }
             }
-
-
-
 
             // Clear SKU list
             clearFields();
@@ -388,7 +394,6 @@ public class TransactionForm extends JFrame implements ActionListener {
     private void populateEmployees() {
         Employee employee = new Employee();
         employeeList = employee.getAllEmployees();
-        // TODO changed addFirst to add
         employeeList.add(null);
         for (Employee emp: employeeList) {
             if (emp != null)
@@ -404,8 +409,42 @@ public class TransactionForm extends JFrame implements ActionListener {
         skuFields.clear();
     }
 
+    public BigDecimal calculateTotalPrice() {
+        // BigDecmial has its own special methods to work with numbers
+        BigDecimal total = BigDecimal.ZERO;
+        Product productHelper = new Product();
 
+        for (int i = 0; i < skuFields.size(); i++) {
+            JTextField skuField = skuFields.get(i);
+            JSpinner quantitySpinner = quantitySpinners.get(i);
 
+            String sku = skuField.getText().trim();
+            int quantity = (Integer) quantitySpinner.getValue();
+
+            // The method isn't static so can use product object to "fill itself" with data
+            Product product = productHelper.getProductBySKU(sku);
+            if (product != null && product.getUnitPrice() != null) {
+                BigDecimal price = product.getUnitPrice();
+                total = total.add(price.multiply(BigDecimal.valueOf(quantity)));
+            }
+        }
+
+        // If it's discounted
+        String discountStr = overallDiscountField.getText();
+        if (!discountStr.isEmpty()) {
+            try {
+                int discountPercent = Integer.parseInt(discountStr);
+                BigDecimal discountMultiplier = BigDecimal.valueOf(discountPercent)
+                        .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_EVEN);
+                BigDecimal discount = total.multiply(discountMultiplier);
+                total = total.subtract(discount);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Invalid discount value.");
+            }
+        }
+
+        return total;
+    }
 
 
     public static void main(String[] args) {
