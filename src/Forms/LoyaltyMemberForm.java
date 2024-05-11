@@ -6,10 +6,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.text.ParseException;
 
+import Entities.LoyaltyMember;
+import Entities.Customer;
+
 public class LoyaltyMemberForm extends JFrame implements ActionListener {
-    
-	 private static final Color BROWN = Color.decode("#8B4513");
-	// Labels
+    // Labels
+    private static final Color BROWN = Color.decode("#8B4513");
     JLabel firstNameLabel = new JLabel("First Name*:");
     JLabel lastNameLabel = new JLabel("Last Name*:");
     JLabel phoneLabel = new JLabel("Phone Number*:");
@@ -28,40 +30,42 @@ public class LoyaltyMemberForm extends JFrame implements ActionListener {
         // Setting up the frame
         setTitle("New Loyalty Member Form");
         setSize(400, 300);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        firstNameLabel.setForeground(BROWN); 
+        // Set default close operation to dispose on close
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        firstNameLabel.setForeground(BROWN);
         lastNameLabel.setForeground(BROWN);
         phoneLabel.setForeground(BROWN);
-        emailLabel.setForeground(BROWN); 
+        emailLabel.setForeground(BROWN);
 
         // Set icon image
         ImageIcon icon = new ImageIcon("src/assets/logoSmall.png");
         setIconImage(icon.getImage());
-        
-        firstNameField.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
-        
+
+        firstNameField.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
         firstNameField.setForeground(Color.GRAY);
         firstNameField.setBackground(Color.WHITE);
-        
+
         firstNameField.setBorder(BorderFactory.createCompoundBorder(
-        		BorderFactory.createLineBorder(Color.LIGHT_GRAY),
-        		BorderFactory.createEmptyBorder(5,10,5,10)));
-        
-        
-        lastNameField.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
+                BorderFactory.createLineBorder(Color.LIGHT_GRAY),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+
+        lastNameField.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         lastNameField.setForeground(Color.GRAY);
         lastNameField.setBackground(Color.WHITE);
-        
+
         lastNameField.setBorder(BorderFactory.createCompoundBorder(
-        		BorderFactory.createLineBorder(Color.LIGHT_GRAY),
-        		BorderFactory.createEmptyBorder(5,10,5,10)));
-        
-        
+                BorderFactory.createLineBorder(Color.LIGHT_GRAY),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+
+        // Calculate the center of the screen
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (screenSize.width - getWidth()) / 2;
+        int y = (screenSize.height - getHeight()) / 2;
+        setLocation(x, y);
 
         // Panel for input fields
         JPanel inputPanel = new JPanel(new GridBagLayout());
-
-        inputPanel.setBackground(Color.WHITE); // Set background color to orange
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -103,17 +107,16 @@ public class LoyaltyMemberForm extends JFrame implements ActionListener {
 
         // Panel for buttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.setBackground(Color.WHITE);
-        buttonPanel.add(submitButton);
         submitButton.setBackground(Color.RED);
         submitButton.setForeground(Color.RED);
+        buttonPanel.add(submitButton);
+        // buttonPanel.setBackground(Color.WHITE);
 
         // Add panels to the frame
         add(inputPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
 
         // Adding action listener to the button
-        
         submitButton.addActionListener(this);
 
         setVisible(true);
@@ -145,6 +148,17 @@ public class LoyaltyMemberForm extends JFrame implements ActionListener {
                 return;
             }
 
+            Customer customer = new Customer();
+            long customerId = customer.insertCustomer(customer);
+
+            LoyaltyMember loyaltyMember = new LoyaltyMember();
+            loyaltyMember.customerID = customerId;
+            loyaltyMember.firstName = firstName;
+            loyaltyMember.lastName = lastName;
+            loyaltyMember.email = email;
+            loyaltyMember.phoneNumber = phoneNumber;
+            loyaltyMember.insertLoyaltyMember(loyaltyMember);
+
             // Submission successful
             String message = "New loyalty member submitted successfully!\n\n" +
                     "First Name: " + firstName + "\n" +
@@ -157,8 +171,6 @@ public class LoyaltyMemberForm extends JFrame implements ActionListener {
             clearFields();
         }
     }
-
-
 
     private boolean isValidPhoneNumber(String phoneNumber) {
         // Simple phone number validation: check if the length is 10 digits

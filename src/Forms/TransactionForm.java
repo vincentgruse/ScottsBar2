@@ -6,16 +6,24 @@ import java.awt.event.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.sql.Timestamp;
+import java.util.List;
+
+import Entities.Customer;
+import Entities.TransactionProducts;
+import Entities.Transactions;
+import Entities.Employee;
 
 public class TransactionForm extends JFrame implements ActionListener {
-	
-	private static final Color BROWN = Color.decode("#8B4513");
+
+    private static final Color BROWN = Color.decode("#8B4513");
     // Labels
     JLabel timeLabel = new JLabel("Time*:");
     JLabel dateLabel = new JLabel("Date*:");
     JLabel paymentTypeLabel = new JLabel("Payment Type*:");
     JLabel memberNumberLabel = new JLabel("Member # (optional):");
-    JLabel skuLabel = new JLabel("Enter Item(s) SKU*:");
+    JLabel employeeLabel = new JLabel("Employee:");
+    JLabel overallDiscountLabel = new JLabel("Overall Discount (%):");
 
     // Spinner for time
     JSpinner timeSpinner;
@@ -24,28 +32,54 @@ public class TransactionForm extends JFrame implements ActionListener {
     JTextField dateField = new JTextField(10);
     JComboBox<String> paymentTypeComboBox;
     JTextField memberNumberField = new JTextField(10);
-    JTextArea skuTextArea = new JTextArea(5, 20);
+    JTextField overallDiscountField = new JTextField(3);
+    JComboBox<String> departmentEmployees = new JComboBox<>();
 
     // Button
     JButton submitButton = new JButton("Submit");
+    JButton addMoreButton = new JButton("Add Row");
+    JButton removeButton = new JButton("Remove Row");
 
     // SKU array
-    ArrayList<String> skuList = new ArrayList<>();
+    ArrayList<JTextField> skuFields = new ArrayList<>();
+    ArrayList<JSpinner> quantitySpinners = new ArrayList<>();
+
+    // Must be here to properly reference for the remove button to work
+    ArrayList<JLabel> skuLabels = new ArrayList<>();
+    ArrayList<JLabel> quantityLabels = new ArrayList<>();
+
+    // Moved here so SKU button can use also
+    JPanel inputPanel = new JPanel(new GridBagLayout());
+
+    // Used to get employee dropdown for whose doing the transaction
+    // Needed to get the snn to store inside transactions table
+    List<Employee> employeeList;
 
     public TransactionForm() {
+
+        // populateEmployees();
         // Setting up the frame
         setTitle("Transaction Form");
         setSize(400, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        employeeLabel.setForeground(BROWN);
+        overallDiscountLabel.setForeground(BROWN);
         timeLabel.setForeground(BROWN);
         dateLabel.setForeground(BROWN);
         paymentTypeLabel.setForeground(BROWN);
         memberNumberLabel.setForeground(BROWN);
-        skuLabel.setForeground(BROWN);
 
-        // Set icon image (replace "path_to_your_icon_image.png" with the actual path to your icon image)
+        // Set icon image (replace "path_to_your_icon_image.png" with the actual path to
+        // your icon image)
         ImageIcon icon = new ImageIcon("src/assets/logoSmall.png");
         setIconImage(icon.getImage());
+
+        // Calculate the center of the screen
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (screenSize.width - getWidth()) / 2;
+        int y = (screenSize.height - getHeight()) / 2;
+        setLocation(x, y);
 
         // Panel for input fields
         JPanel inputPanel = new JPanel(new GridBagLayout());
@@ -68,7 +102,7 @@ public class TransactionForm extends JFrame implements ActionListener {
         dateField.setText(date);
 
         // Add payment types to the combo box
-        String[] paymentTypes = {"", "Cash", "Check", "Credit", "Debit"};
+        String[] paymentTypes = { "", "Cash", "Check", "Credit", "Debit" };
         paymentTypeComboBox = new JComboBox<>(paymentTypes);
 
         // Add components to input panel
@@ -84,34 +118,57 @@ public class TransactionForm extends JFrame implements ActionListener {
 
         gbc.gridx = 0;
         gbc.gridy = 2;
+        inputPanel.add(employeeLabel, gbc);
+        gbc.gridx = 1;
+        inputPanel.add(departmentEmployees, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
         inputPanel.add(paymentTypeLabel, gbc);
         gbc.gridx = 1;
         inputPanel.add(paymentTypeComboBox, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         inputPanel.add(memberNumberLabel, gbc);
         gbc.gridx = 1;
         inputPanel.add(memberNumberField, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 4;
-        inputPanel.add(skuLabel, gbc);
+        gbc.gridy = 5;
+        inputPanel.add(overallDiscountLabel, gbc);
         gbc.gridx = 1;
-        gbc.gridheight = 2; // Span two rows
-        inputPanel.add(new JScrollPane(skuTextArea), gbc);
-        inputPanel.setBackground(Color.WHITE); // Set
+        inputPanel.add(overallDiscountField, gbc);
+        overallDiscountField.setText("0");
+
+        int defaultSKUBoxes = 1;
+        for (int i = 0; i < defaultSKUBoxes; i++) {
+            // addSkuQuantityPair();
+        }
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.gridwidth = 2;
+        inputPanel.add(addMoreButton, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridwidth = 2;
+        inputPanel.add(removeButton, gbc);
 
         // Panel for buttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.add(submitButton);
-        buttonPanel.setBackground(Color.WHITE);
+        // buttonPanel.setBackground(Color.WHITE);
         submitButton.setBackground(Color.RED);
         submitButton.setForeground(Color.RED);
+        addMoreButton.setBackground(Color.RED);
+        addMoreButton.setForeground(Color.RED);
+        removeButton.setBackground(Color.RED);
+        removeButton.setForeground(Color.RED);
+
         // Add panels to the frame
         add(inputPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
-        
 
         // Adding action listener to the button
         submitButton.addActionListener(this);
@@ -176,7 +233,6 @@ public class TransactionForm extends JFrame implements ActionListener {
             skuTextArea.setText("");
         }
     }
-
 
     // Method to get time string from the spinner
     private String getTimeString() {

@@ -1,326 +1,194 @@
 package Forms;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import javax.swing.text.MaskFormatter;
-import java.text.ParseException;
-import java.util.Objects;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
-public class VendorForm extends JFrame implements ActionListener {
-    
-	 private static final Color BROWN = Color.decode("#8B4513");
-	// Labels
-    JLabel nameLabel = new JLabel("Name*:");
-    JLabel addressLabel = new JLabel("Address*:");
-    JLabel addressLine2Label = new JLabel("Address Line 2:");
-    JLabel cityLabel = new JLabel("City*:");
-    JLabel stateLabel = new JLabel("State*:");
-    JLabel zipLabel = new JLabel("ZIP*:");
-    JLabel emailLabel = new JLabel("Email*:");
-    JLabel phoneLabel = new JLabel("Phone*:");
-    JLabel contractStatusLabel = new JLabel(""); // Label to display contract file name
+public class TransactionForm extends JFrame implements ActionListener {
 
-    // Text fields
-    JTextField nameField = new JTextField(20);
-    JTextField addressField = new JTextField(20);
-    JTextField addressLine2Field = new JTextField(20);
-    JTextField cityField = new JTextField(20);
-    JComboBox<String> stateComboBox;
-    JTextField zipField = new JTextField(10);
-    JTextField emailField = new JTextField(20);
-    JFormattedTextField phoneField;
+    private static final Color BROWN = Color.decode("#8B4513");
+    // Labels
+    JLabel timeLabel = new JLabel("Time*:");
+    JLabel dateLabel = new JLabel("Date*:");
+    JLabel paymentTypeLabel = new JLabel("Payment Type*:");
+    JLabel memberNumberLabel = new JLabel("Member # (optional):");
+    JLabel skuLabel = new JLabel("Enter Item(s) SKU*:");
 
-    // Buttons
-    JButton contractButton = new JButton("Upload Contract");
+    // Spinner for time
+    JSpinner timeSpinner;
+
+    // Text fields and combo box
+    JTextField dateField = new JTextField(10);
+    JComboBox<String> paymentTypeComboBox;
+    JTextField memberNumberField = new JTextField(10);
+    JTextArea skuTextArea = new JTextArea(5, 20);
+
+    // Button
     JButton submitButton = new JButton("Submit");
 
-    public VendorForm() {
+    // SKU array
+    ArrayList<String> skuList = new ArrayList<>();
+
+    public TransactionForm() {
         // Setting up the frame
-        setTitle("Vendor Form");
-        setSize(400, 450); // Increased height to accommodate contract status label
+        setTitle("Transaction Form");
+        setSize(400, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        nameLabel.setForeground(BROWN);
-        addressLabel.setForeground(BROWN);
-        addressLine2Label.setForeground(BROWN);
-        cityLabel.setForeground(BROWN);
-        zipLabel.setForeground(BROWN);
-        stateLabel.setForeground(BROWN);
-        emailLabel.setForeground(BROWN);
-        phoneLabel.setForeground(BROWN);
-        contractStatusLabel.setForeground(BROWN);
-        
-        
-        
-        nameField.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
-        
-        nameField.setForeground(Color.GRAY);
-        nameField.setBackground(Color.WHITE);
-        
-        nameField.setBorder(BorderFactory.createCompoundBorder(
-        		BorderFactory.createLineBorder(Color.LIGHT_GRAY),
-        		BorderFactory.createEmptyBorder(5,10,5,10)));
-        
-        addressField.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
-        addressField.setForeground(Color.GRAY);
-        addressField.setBackground(Color.WHITE);
-        
-        addressField.setBorder(BorderFactory.createCompoundBorder(
-        		BorderFactory.createLineBorder(Color.LIGHT_GRAY),
-        		BorderFactory.createEmptyBorder(5,10,5,10)));
-        
-        addressLine2Field.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
-        addressLine2Field.setForeground(Color.GRAY);
-        addressLine2Field.setBackground(Color.WHITE);
-        
-        addressLine2Field.setBorder(BorderFactory.createCompoundBorder(
-        		BorderFactory.createLineBorder(Color.LIGHT_GRAY),
-        		BorderFactory.createEmptyBorder(5,10,5,10)));
-        
-        cityField.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
-        cityField.setForeground(Color.GRAY);
-        cityField.setBackground(Color.WHITE);
-        
-        cityField.setBorder(BorderFactory.createCompoundBorder(
-        		BorderFactory.createLineBorder(Color.LIGHT_GRAY),
-        		BorderFactory.createEmptyBorder(5,10,5,10)));
-        
-        zipField.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
-        zipField.setForeground(Color.GRAY);
-        zipField.setBackground(Color.WHITE);
-        
-        zipField.setBorder(BorderFactory.createCompoundBorder(
-        		BorderFactory.createLineBorder(Color.LIGHT_GRAY),
-        		BorderFactory.createEmptyBorder(5,10,5,10)));
-       
-        emailField.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
-        emailField.setForeground(Color.GRAY);
-        emailField.setBackground(Color.WHITE);
-        
-        emailField.setBorder(BorderFactory.createCompoundBorder(
-        		BorderFactory.createLineBorder(Color.LIGHT_GRAY),
-        		BorderFactory.createEmptyBorder(5,10,5,10)));
-       
-     
-       
-        
-        
-       
-        
-       
-        
-       
-        
-     
-        // Set icon image
+        timeLabel.setForeground(BROWN);
+        dateLabel.setForeground(BROWN);
+        paymentTypeLabel.setForeground(BROWN);
+        memberNumberLabel.setForeground(BROWN);
+        skuLabel.setForeground(BROWN);
+
+        // Set icon image (replace "path_to_your_icon_image.png" with the actual path to
+        // your icon image)
         ImageIcon icon = new ImageIcon("src/assets/logoSmall.png");
         setIconImage(icon.getImage());
 
         // Panel for input fields
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-       
-        inputPanel.setBackground(Color.WHITE); // Set
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        // Add states to the combo box
-        String[] states = {"",
-                "AL", "AK", "AZ", "AR", "CA",
-                "CO", "CT", "DE", "FL", "GA",
-                "HI", "ID", "IL", "IN", "IA",
-                "KS", "KY", "LA", "ME", "MD",
-                "MA", "MI", "MN", "MS", "MO",
-                "MT", "NE", "NV", "NH", "NJ",
-                "NM", "NY", "NC", "ND", "OH",
-                "OK", "OR", "PA", "RI", "SC",
-                "SD", "TN", "TX", "UT", "VT",
-                "VA", "WA", "WV", "WI", "WY"};
-        stateComboBox = new JComboBox<>(states);
+        // Spinner model for time
+        SpinnerDateModel timeModel = new SpinnerDateModel();
+        timeSpinner = new JSpinner(timeModel);
+        JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(timeSpinner, "hh:mm:ss a");
+        timeSpinner.setEditor(timeEditor);
 
-        try {
-            MaskFormatter phoneFormatter = new MaskFormatter("(###) ###-####");
-            phoneField = new JFormattedTextField(phoneFormatter);
-        } catch (ParseException ex) {
-            ex.printStackTrace();
-        }
+        // Autofill date field with current date
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        String date = now.format(dateFormatter);
+        dateField.setText(date);
 
-        // Adjust the width of the phone field
-        phoneField.setColumns(9); // Increase the number of columns
+        // Add payment types to the combo box
+        String[] paymentTypes = { "", "Cash", "Check", "Credit", "Debit" };
+        paymentTypeComboBox = new JComboBox<>(paymentTypes);
 
         // Add components to input panel
-        inputPanel.add(nameLabel, gbc);
+        inputPanel.add(timeLabel, gbc);
         gbc.gridx = 1;
-        inputPanel.add(nameField, gbc);
+        inputPanel.add(timeSpinner, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        inputPanel.add(addressLabel, gbc);
+        inputPanel.add(dateLabel, gbc);
         gbc.gridx = 1;
-        inputPanel.add(addressField, gbc);
+        inputPanel.add(dateField, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 2;
-        inputPanel.add(addressLine2Label, gbc);
+        inputPanel.add(paymentTypeLabel, gbc);
         gbc.gridx = 1;
-        inputPanel.add(addressLine2Field, gbc);
+        inputPanel.add(paymentTypeComboBox, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
-        inputPanel.add(cityLabel, gbc);
+        inputPanel.add(memberNumberLabel, gbc);
         gbc.gridx = 1;
-        inputPanel.add(cityField, gbc);
+        inputPanel.add(memberNumberField, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 4;
-        inputPanel.add(stateLabel, gbc);
+        inputPanel.add(skuLabel, gbc);
         gbc.gridx = 1;
-        inputPanel.add(stateComboBox, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 5;
-        inputPanel.add(zipLabel, gbc);
-        gbc.gridx = 1;
-        inputPanel.add(zipField, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 6;
-        inputPanel.add(emailLabel, gbc);
-        gbc.gridx = 1;
-        inputPanel.add(emailField, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 7;
-        inputPanel.add(phoneLabel, gbc);
-        gbc.gridx = 1;
-        inputPanel.add(phoneField, gbc);
-
-        // Add contract status label
-        gbc.gridx = 0;
-        gbc.gridy = 8;
-        gbc.gridwidth = 2;
-        inputPanel.add(contractStatusLabel, gbc);
+        gbc.gridheight = 2; // Span two rows
+        inputPanel.add(new JScrollPane(skuTextArea), gbc);
+        inputPanel.setBackground(Color.WHITE); // Set
 
         // Panel for buttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.setBackground(Color.WHITE);
-        buttonPanel.add(contractButton);
         buttonPanel.add(submitButton);
-
+        buttonPanel.setBackground(Color.WHITE);
+        submitButton.setBackground(Color.RED);
+        submitButton.setForeground(Color.RED);
         // Add panels to the frame
         add(inputPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // Adding action listeners to the buttons
-        contractButton.addActionListener(this);
-        contractButton.setBackground(Color.RED);
-        contractButton.setForeground(Color.RED);
+        // Adding action listener to the button
         submitButton.addActionListener(this);
-        submitButton.setBackground(Color.RED);
-        submitButton.setForeground(Color.RED);
 
         setVisible(true);
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == contractButton) {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setFileFilter(new FileNameExtensionFilter("PDF files", "pdf"));
-            int returnValue = fileChooser.showOpenDialog(this);
-            if (returnValue == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = fileChooser.getSelectedFile();
-                contractStatusLabel.setText("File selected: " + selectedFile.getName());
-            }
-        } else if (e.getSource() == submitButton) {
-            String name = nameField.getText();
-            String address = addressField.getText();
-            String addressLine2 = addressLine2Field.getText();
-            String city = cityField.getText();
-            String state = (String) stateComboBox.getSelectedItem();
-            String zip = zipField.getText();
-            String email = emailField.getText();
-            String phone = phoneField.getText().replaceAll("[()\\s-]+", ""); // Remove non-digit characters
-
-            // Check if any required field is empty
-            if (name.isEmpty() || address.isEmpty() || city.isEmpty() || Objects.requireNonNull(state).isEmpty() || zip.isEmpty() || email.isEmpty() || phone.isEmpty()) {
+        if (e.getSource() == submitButton) {
+            // Check if payment type and SKU fields are filled
+            String paymentType = (String) paymentTypeComboBox.getSelectedItem();
+            String skuText = skuTextArea.getText().trim();
+            assert paymentType != null;
+            if (paymentType.isEmpty() || skuText.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please complete required fields.");
                 return;
             }
 
-            // Validate email
-            if (!isValidEmail(email)) {
-                JOptionPane.showMessageDialog(this, "Invalid email format.");
+            // Split SKU text by commas and validate each SKU
+            String[] skus = skuText.split(",");
+            StringBuilder invalidSkus = new StringBuilder();
+            for (String sku : skus) {
+                String trimmedSku = sku.trim();
+                if (trimmedSku.length() < 8 || trimmedSku.length() > 12 || !trimmedSku.matches("[a-zA-Z0-9]+")) {
+                    if (!invalidSkus.isEmpty()) {
+                        invalidSkus.append(", ");
+                    }
+                    invalidSkus.append(trimmedSku);
+                }
+            }
+
+            // Display invalid SKUs, if any
+            if (!invalidSkus.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Invalid SKUs, please revise: " + invalidSkus);
                 return;
             }
 
-            // Validate email
-            if (!isValidZIP(zip)) {
-                JOptionPane.showMessageDialog(this, "Invalid zipcode format.");
-                return;
+            // Retrieve values from fields
+            String time = getTimeString();
+            String date = dateField.getText();
+            String memberNumber = memberNumberField.getText();
+
+            // Split SKU text by commas and add to SKU list
+            for (String sku : skus) {
+                skuList.add(sku.trim()); // Trim to remove leading/trailing whitespaces
             }
 
-            // Validate phone number
-            if (!isValidPhoneNumber(phone)) {
-                JOptionPane.showMessageDialog(this, "Invalid phone number format.");
-                return;
-            }
-
-            // Submission successful
+            // Display transaction details
             StringBuilder message = new StringBuilder();
-            message.append("Vendor information submitted successfully!\n\n");
-            message.append("Name: ").append(name).append("\n");
-            message.append("Address: ").append(address).append("\n");
-            if (!addressLine2.isEmpty()) {
-                message.append("Address Line 2: ").append(addressLine2).append("\n");
+            message.append("Time: ").append(time).append("\n");
+            message.append("Date: ").append(date).append("\n");
+            message.append("Payment Type: ").append(paymentType).append("\n");
+            message.append("Member #: ").append(memberNumber).append("\n");
+            message.append("SKU(s):\n");
+            for (String sku : skuList) {
+                message.append("- ").append(sku).append("\n");
             }
-            message.append("City: ").append(city).append("\n");
-            message.append("State: ").append(state).append("\n");
-            message.append("ZIP: ").append(zip).append("\n");
-            message.append("Email: ").append(email).append("\n");
-            message.append("Phone: ").append(phone).append("\n");
             JOptionPane.showMessageDialog(this, message.toString());
 
-            // Clear fields
-            clearFields();
+            // Clear SKU list and text area
+            skuList.clear();
+            skuTextArea.setText("");
         }
     }
 
-    // Method to validate email
-    private boolean isValidEmail(String email) {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        return email.matches(emailRegex);
-    }
-
-    // Method to validate ZIP code
-    private boolean isValidZIP(String zip) {
-        String zipRegex = "^\\d{5}$"; // Assumes 5-digit ZIP code format
-        return zip.matches(zipRegex);
-    }
-
-    // Method to validate phone number
-    private boolean isValidPhoneNumber(String phone) {
-        String phoneRegex = "^\\d{10}$";
-        return phone.matches(phoneRegex);
-    }
-
-    public void clearFields() {
-        nameField.setText("");
-        addressField.setText("");
-        addressLine2Field.setText("");
-        cityField.setText("");
-        stateComboBox.setSelectedIndex(0);
-        zipField.setText("");
-        emailField.setText("");
-        phoneField.setValue(null);
-        contractStatusLabel.setText(""); // Clear contract status label
+    // Method to get time string from the spinner
+    private String getTimeString() {
+        Object value = timeSpinner.getValue();
+        if (value instanceof java.util.Date time) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
+            return formatter.format(time.toInstant());
+        }
+        return "";
     }
 
     public static void main(String[] args) {
-        // Create and show the vendor form
-        new VendorForm();
+        // Create and show the transaction form
+        new TransactionForm();
     }
 }

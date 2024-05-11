@@ -9,9 +9,9 @@ import java.text.NumberFormat;
 import java.util.Objects;
 
 public class ProductForm extends JFrame implements ActionListener {
-    
-	 private static final Color BROWN = Color.decode("#8B4513");
-	// Labels
+
+    private static final Color BROWN = Color.decode("#8B4513");
+    // Labels
     JLabel brandLabel = new JLabel("Brand*:");
     JLabel categoryLabel = new JLabel("Category*:");
     JLabel descriptionLabel = new JLabel("Description*:");
@@ -41,7 +41,7 @@ public class ProductForm extends JFrame implements ActionListener {
         // Set icon image
         ImageIcon icon = new ImageIcon("src/assets/logoSmall.png");
         setIconImage(icon.getImage());
-        
+
         brandLabel.setForeground(BROWN);
         categoryLabel.setForeground(BROWN);
         descriptionLabel.setForeground(BROWN);
@@ -49,12 +49,10 @@ public class ProductForm extends JFrame implements ActionListener {
         srpLabel.setForeground(BROWN);
         vendorLabel.setForeground(BROWN);
         quantityLabel.setForeground(BROWN);
-        
-        
 
         // Panel for input fields
         JPanel inputPanel = new JPanel(new GridBagLayout());
-     
+
         inputPanel.setBackground(Color.WHITE);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -63,7 +61,7 @@ public class ProductForm extends JFrame implements ActionListener {
         gbc.insets = new Insets(5, 5, 5, 5);
 
         // Add categories to the combo box
-        String[] categories = {"", "Food", "Alcohol", "Misc."};
+        String[] categories = { "", "Food", "Alcohol", "Misc." };
         categoryComboBox = new JComboBox<>(categories);
 
         // Spinner for quantity
@@ -96,8 +94,7 @@ public class ProductForm extends JFrame implements ActionListener {
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        
-        
+
         inputPanel.add(categoryLabel, gbc);
         gbc.gridx = 1;
         inputPanel.add(categoryComboBox, gbc);
@@ -161,7 +158,8 @@ public class ProductForm extends JFrame implements ActionListener {
             int quantity = (int) quantitySpinner.getValue();
 
             // Check for empty fields
-            if (brand.isEmpty() || Objects.requireNonNull(category).isEmpty() || description.isEmpty() || vendor.isEmpty()) {
+            if (brand.isEmpty() || Objects.requireNonNull(category).isEmpty() || description.isEmpty()
+                    || vendor.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please complete required fields.");
                 return;
             }
@@ -193,7 +191,6 @@ public class ProductForm extends JFrame implements ActionListener {
             clearFields();
         }
     }
-
 
     private void clearFields() {
         brandField.setText("");
