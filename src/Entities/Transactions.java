@@ -2,6 +2,7 @@ package Entities;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -67,19 +68,30 @@ public class Transactions {
         this.customerID = customerID;
     }
 
-    public void insertTransaction(Transactions transaction) {
+
+    public long insertTransaction(Transactions transaction) {
         String query = "INSERT INTO Transactions (OccuredAt, Total, PaymentMethod, EmployeeSSN, CustomerID) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        long transactionId = 0;
+        try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             statement.setTimestamp(1, new java.sql.Timestamp(transaction.getOccuredAt().getTime()));
             statement.setBigDecimal(2, transaction.getTotal());
             statement.setString(3, transaction.getPaymentMethod());
             statement.setInt(4, transaction.getEmployeeSSN());
             statement.setLong(5, transaction.getCustomerID());
             statement.executeUpdate();
+
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    transactionId = generatedKeys.getLong(1);
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return transactionId;
     }
+
 
     public void deleteTransaction(long transactionID) {
         String query = "DELETE FROM Transactions WHERE TransactionID = ?";

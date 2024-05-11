@@ -12,7 +12,7 @@ import static Helper.DatabaseHelper.connection;
 public class TransactionProducts {
     public Long transactionID;
     public String SKU;
-    private Integer quantity;
+    public Integer quantity;
     public BigDecimal overallDiscount;
 
     public Long getTransactionID() {
