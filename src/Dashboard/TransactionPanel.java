@@ -73,17 +73,8 @@ public class TransactionPanel {
 
 
         // Populate table with sample transaction data
-        DefaultTableModel model = getDefaultTableModel();
-        transactionTable.setModel(model);
 
-        // Enable sorting for each column
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
-        transactionTable.setRowSorter(sorter);
-
-        // Display sort arrows in the table header
-        transactionTable.getTableHeader().setReorderingAllowed(false);
-        transactionTable.setAutoCreateRowSorter(true);
-
+        RefreshTables();
         return transactionPanel;
     }
 
@@ -107,5 +98,18 @@ public class TransactionPanel {
                 return false;
             }
         };
+    }
+
+    public static void RefreshTables() {
+        DefaultTableModel model = getDefaultTableModel();
+        transactionTable.setModel(model);
+
+        // Enable sorting for each column
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        transactionTable.setRowSorter(sorter);
+
+        // Display sort arrows in the table header
+        transactionTable.getTableHeader().setReorderingAllowed(false);
+        transactionTable.setAutoCreateRowSorter(true);
     }
 }

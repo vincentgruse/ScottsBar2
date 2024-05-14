@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.text.ParseException;
 
+import Dashboard.CustomerPanel;
 import Entities.LoyaltyMember;
 import Entities.Customer;
 
@@ -142,7 +143,7 @@ public class LoyaltyMemberForm extends JFrame implements ActionListener {
                     "Email: " + email + "\n";
             JOptionPane.showMessageDialog(this, message);
 
-
+            CustomerPanel.RefreshTables();
             // Clear fields
             clearFields();
         }

@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.sql.*;
 import java.util.List;
 
+import Dashboard.ProductPanel;
+import Dashboard.TransactionPanel;
 import Entities.Customer;
 import Entities.TransactionProducts;
 import Entities.Transactions;
@@ -338,7 +340,8 @@ public class TransactionForm extends JFrame implements ActionListener {
                     }
                 }
             }
-
+            TransactionPanel.RefreshTables();
+            ProductPanel.RefreshTables();
 
 
             // Clear SKU list

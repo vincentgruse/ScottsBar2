@@ -85,17 +85,7 @@ public class CustomerPanel {
         customerPanel.add(addButton, gbc);
 
         // Populate table with sample customer data
-        DefaultTableModel model = getDefaultTableModel();
-        customerTable.setModel(model);
-
-        // Enable sorting for each column
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
-        customerTable.setRowSorter(sorter);
-
-        // Display sort arrows in the table header
-        customerTable.getTableHeader().setReorderingAllowed(false);
-        customerTable.setAutoCreateRowSorter(true);
-
+        RefreshTables();
         return customerPanel;
     }
 
@@ -122,5 +112,18 @@ public class CustomerPanel {
                 }
             }
         };
+    }
+
+    public static void RefreshTables() {
+        DefaultTableModel model = getDefaultTableModel();
+        customerTable.setModel(model);
+
+        // Enable sorting for each column
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        customerTable.setRowSorter(sorter);
+
+        // Display sort arrows in the table header
+        customerTable.getTableHeader().setReorderingAllowed(false);
+        customerTable.setAutoCreateRowSorter(true);
     }
 }
