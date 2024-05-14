@@ -5,6 +5,8 @@ import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
+import static Dashboard.AdminDashboard.userStatus;
+
 public class HomePanel {
     // Constants for colors, border thickness, and assets path
     public static final Color ORANGE = Color.decode("#F0C28E");
@@ -44,8 +46,16 @@ public class HomePanel {
 
         // Create buttons and add them to the home buttons panel
         for (int i = 0; i < homeButtonNames.length; i++) {
-            JButton button = createHomeButton(homeButtonNames[i], homeButtonIcons[i], formClasses[i]);
-            homeButtonsPanel.add(button);
+            if (userStatus == 1) {
+                JButton button = createHomeButton(homeButtonNames[i], homeButtonIcons[i], formClasses[i]);
+                homeButtonsPanel.add(button);
+            }
+            else {
+                if (!(homeButtonNames[i].contains("Employee") || homeButtonNames[i].contains("Department"))) {
+                    JButton button = createHomeButton(homeButtonNames[i], homeButtonIcons[i], formClasses[i]);
+                    homeButtonsPanel.add(button);
+                }
+            }
         }
 
         return homeButtonsPanel;

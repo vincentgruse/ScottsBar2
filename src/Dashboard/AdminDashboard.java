@@ -10,7 +10,7 @@ import Login.Login;
 
 public class AdminDashboard extends JFrame {
     // Constants for colors, border thickness, and assets path
-    public static int userStatus = CommonHelper.getUserStatus();
+    public static int userStatus = -1;
     public static final Color LIGHT_BROWN = Color.decode("#F2E9E2");
     public static final Color DARK_BROWN = Color.decode("#733B38");
     public static final Color ORANGE = Color.decode("#F0C28E");
@@ -38,6 +38,7 @@ public class AdminDashboard extends JFrame {
 
     // Method to initialize the UI components
     private void initializeUI() {
+        userStatus = CommonHelper.getUserStatus();
         setTitle("Admin Dashboard");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -81,7 +82,12 @@ public class AdminDashboard extends JFrame {
         // Create tabs and add them to the tabbed pane
         for (String tabName : tabNames) {
             ImageIcon tabIcon = new ImageIcon(ASSETS_PATH + tabName.toLowerCase() + ".png");
-            tabbedPane.addTab(tabName, tabIcon, createPanel(tabName, userStatus));
+            if (userStatus == 1)
+                tabbedPane.addTab(tabName, tabIcon, createPanel(tabName));
+            else {
+                if (!(tabName.equals("Employees") || tabName.equals("Departments")))
+                    tabbedPane.addTab(tabName, tabIcon, createPanel(tabName));
+            }
         }
 
         // Add title panel and tabbed pane to the frame
@@ -93,12 +99,7 @@ public class AdminDashboard extends JFrame {
     }
 
     // Method to create a panel corresponding to each tab
-    private JPanel createPanel(String tabName, int userStatus) {
-        // Check if the tab should be visible based on user status
-        if (!isTabVisible(tabName, userStatus)) {
-            return new JPanel(); // Return an empty panel if the tab should not be visible
-        }
-
+    private JPanel createPanel(String tabName) {
         // Create the panel corresponding to the tab
         return switch (tabName) {
             case "Home" -> HomePanel.createHomePanel();
@@ -111,17 +112,6 @@ public class AdminDashboard extends JFrame {
             case "Graphs" -> GraphPanel.createGraphPanel();
             default -> new JPanel(); // Create empty panel for other tabs for now
         };
-    }
-
-    // Method to check if a tab should be visible based on user status
-    private boolean isTabVisible(String tabName, int userStatus) {
-        // Only show "Departments" and "Employees" tabs for admins
-        if (userStatus == 1) {
-            return true; // All tabs are visible for admins
-        } else {
-            // For employees, hide "Departments" and "Employees" tabs
-            return !tabName.equals("Departments") && !tabName.equals("Employees");
-        }
     }
 
     // Method to create the title panel
@@ -153,7 +143,12 @@ public class AdminDashboard extends JFrame {
     private static JPanel getjPanel() {
         ImageIcon imageIcon = new ImageIcon(ASSETS_PATH + "logoSmall.png");
         JLabel imageLabel = new JLabel(imageIcon);
-        JLabel textLabel = new JLabel("Admin Dashboard");
+        JLabel textLabel;
+        if (userStatus == 1) {
+            textLabel = new JLabel("Admin Dashboard");
+        } else {
+            textLabel = new JLabel("Employee Dashboard");
+        }
         textLabel.setFont(new Font("Arial", Font.PLAIN, 30));
         textLabel.setForeground(LIGHT_BROWN);
 
