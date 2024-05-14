@@ -252,10 +252,9 @@ public class TransactionForm extends JFrame implements ActionListener {
             } else {
                 customerId = Long.parseLong(memberNumber);
             }
-            int employeeSSN = 0;
-            if (departmentEmployees.getSelectedIndex() != -1 && departmentEmployees.getSelectedIndex() != 0) {
-                employeeSSN = employeeList.get(departmentEmployees.getSelectedIndex()).employeeSSN;
-            }
+
+            int employeeSSN = employeeList.get(departmentEmployees.getSelectedIndex()).employeeSSN;
+
 
             BigDecimal total = calculateTotalPrice();
 
@@ -287,6 +286,7 @@ public class TransactionForm extends JFrame implements ActionListener {
             Transactions transaction = new Transactions();
             transaction.occurredAt = dateTime;
             transaction.paymentMethod = paymentType;
+            System.out.println(employeeSSN);
             transaction.employeeSSN = employeeSSN;
             transaction.customerID = customerId;
             transaction.total = total;
@@ -309,10 +309,37 @@ public class TransactionForm extends JFrame implements ActionListener {
                     transactionProduct.quantity = quantity;
                     transactionProduct.overallDiscount = BigDecimal.valueOf(overallDiscountInt);
                     transactionProduct.transactionID = transactionID;
+                    transactionProduct.insertTransactionProduct(transactionProduct);
 
                     transactionProductsList.add(transactionProduct);
+
                 }
             }
+
+            // Remove quantity from products stock
+            ArrayList<Product> productsList = new ArrayList<>();
+
+            for (int i = 0; i < skuFields.size(); i++) {
+                JTextField skuField = skuFields.get(i);
+                JSpinner quantitySpinner = quantitySpinners.get(i);
+
+                String sku = skuField.getText().trim();
+                int quantity = (Integer) quantitySpinner.getValue();
+
+                if (!sku.isEmpty() && quantity > 0) {
+                    Product product = new Product();
+                    int inStock = product.checkProductQuantity(sku);
+                    if (inStock >= quantity) {
+                        // We are good
+                        product.updateProductQuantity(sku, inStock - quantity);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "There is only " + inStock + " of " + sku + ".");
+                        return;
+                    }
+                }
+            }
+
+
 
             // Clear SKU list
             clearFields();

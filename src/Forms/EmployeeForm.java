@@ -214,7 +214,7 @@ public class EmployeeForm extends JFrame implements ActionListener {
     private void populateEmployees() {
         Employee employee = new Employee();
         employeeList = employee.getAllEmployees();
-        employeeList.addFirst(null);
+        employeeList.add(null);
         for (Employee emp: employeeList) {
             if (emp != null)
                 departmentEmployees.addItem(emp.firstName + " " + emp.lastName);

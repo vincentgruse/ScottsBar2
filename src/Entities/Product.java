@@ -200,4 +200,29 @@ public class Product {
             e.printStackTrace();
         }
     }
+
+    public int checkProductQuantity(String SKU) {
+        String query = "SELECT Stock FROM Product WHERE SKU = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, SKU);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {  // Move the cursor to the first row
+                return resultSet.getInt("Stock");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public void updateProductQuantity(String SKU, int quantity) {
+        String query = "UPDATE Product SET Stock = ? WHERE SKU = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, quantity);
+            statement.setString(2, SKU);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
