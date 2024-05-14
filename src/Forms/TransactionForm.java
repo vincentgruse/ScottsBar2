@@ -75,7 +75,7 @@ public class TransactionForm extends JFrame implements ActionListener {
 
         // Setting up the frame
         setTitle("Transaction Form");
-        setSize(400, 400);
+        setSize(500, 400);
         // Set default close operation to dispose on close
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
