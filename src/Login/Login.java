@@ -1,6 +1,7 @@
 package Login;
 
 import Dashboard.AdminDashboard;
+import Helper.CommonHelper;
 import Services.Authorization;
 
 import javax.swing.*;
@@ -77,7 +78,7 @@ public class Login extends JFrame implements ActionListener{
         if (username.equals("admin") && password.equals("password")) {
             JOptionPane.showMessageDialog(this, "Login Successful!");
             setVisible(false);
-
+            CommonHelper.username = "admin";
             AdminDashboard adminDashboard = new AdminDashboard();
             adminDashboard.setVisible(true);
         }
@@ -85,6 +86,7 @@ public class Login extends JFrame implements ActionListener{
             if (authorization.login(username, password)) {
                 JOptionPane.showMessageDialog(this, "Login Successful!");
                 setVisible(false);
+                CommonHelper.username = username;
 
                 AdminDashboard adminDashboard = new AdminDashboard();
                 adminDashboard.setVisible(true);
