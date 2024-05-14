@@ -190,7 +190,7 @@ public class TransactionForm extends JFrame implements ActionListener {
             String time = getTimeString();
             String date = dateField.getText();
             String overallDiscount = overallDiscountField.getText();
-            int overallDiscountInt = Integer.parseInt(overallDiscount);
+            int overallDiscountInt = Integer.parseInt(overallDiscount) / 100;
             int employee = departmentEmployees.getSelectedIndex();
             String employeeName = employeeList.get(employee).firstName + " " + employeeList.get(employee).lastName;
 
