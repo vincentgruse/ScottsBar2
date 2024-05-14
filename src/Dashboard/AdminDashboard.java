@@ -16,7 +16,7 @@ public class AdminDashboard extends JFrame {
     public static final Color ORANGE = Color.decode("#F0C28E");
     public static final int BORDER_THICKNESS = 3;
     public static final int TAB_WIDTH = 200; // Fixed width of the tabs
-    public static final int TAB_HEIGHT = 80; // Fixed height of the tabs
+    public static final int TAB_HEIGHT = 70; // Fixed height of the tabs
     public static final String ASSETS_PATH = "src/assets/";
 
     // Array of tab names and corresponding icon names
