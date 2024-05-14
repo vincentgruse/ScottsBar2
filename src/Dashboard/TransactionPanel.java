@@ -1,15 +1,28 @@
 package Dashboard;
 
+import Entities.LoyaltyMember;
+import Entities.TransactionProducts;
+import Entities.Transactions;
 import Forms.TransactionForm;
+import Models.TransactionCustProd;
+import Models.TransactionProductDetail;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Vector;
 
 public class TransactionPanel {
+    private static Transactions transactions = new Transactions();
+    private static TransactionProducts transactionProducts = new TransactionProducts();
+
+    static JTable transactionTable = new JTable();
+    static JScrollPane scrollPane = new JScrollPane(transactionTable);
     // Method to create the Transaction panel
     public static JPanel createTransactionPanel() {
         JPanel transactionPanel = new JPanel(new GridBagLayout());
@@ -31,8 +44,6 @@ public class TransactionPanel {
         transactionPanel.add(titleLabel, gbc);
 
         // Adding table to display transaction information
-        JTable transactionTable = new JTable();
-        JScrollPane scrollPane = new JScrollPane(transactionTable);
 
         // Adding scroll pane to the panel
         gbc.gridx = 0;
@@ -40,20 +51,26 @@ public class TransactionPanel {
         gbc.gridwidth = 2; // Span across two columns
         transactionPanel.add(scrollPane, gbc);
 
-        // Adding "+Add Transaction" button
-        JButton addButton = new JButton("+Add Transaction");
-        addButton.setFont(new Font("Arial", Font.PLAIN, 20));
-        addButton.addActionListener(e -> {
-            // Open the TransactionForm to add a new transaction
-            TransactionForm transactionForm = new TransactionForm();
-            transactionForm.setVisible(true);
+
+        transactionTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) { // Check for double-click
+                    // Get the selected row
+                    int row = transactionTable.getSelectedRow();
+
+                    long tranID = Long.parseLong(transactionTable.getValueAt(row, 0).toString());
+                    String message = "";
+                    var customerTransactions = transactionProducts.getTransactionProductsByTransactionId(tranID);
+                    for (TransactionProductDetail tran: customerTransactions) {
+                        message += "Transaction ID: "+tran.transactionID+" | ProductName: "+tran.productName+ " | Unit Price: "+tran.unitPrice+" | Discount: "+tran.discount+"\n";
+                    }
+                    // Perform desired action here, for example, show a message dialog
+                    JOptionPane.showMessageDialog(transactionTable, !(message.isBlank() && message.isEmpty()) ? message : "No Transactions Found");
+                }
+            }
         });
 
-        // Adding button to the panel
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth = 1; // Reset gridwidth
-        transactionPanel.add(addButton, gbc);
 
         // Populate table with sample transaction data
         DefaultTableModel model = getDefaultTableModel();
@@ -72,22 +89,23 @@ public class TransactionPanel {
 
     private static DefaultTableModel getDefaultTableModel() {
         Vector<String> columns = new Vector<>(Arrays.asList(
-                "Transaction ID", "Time", "Date", "Payment", "Total", "Member ID", "Items", "Action"
+                "Transaction ID", "Date", "Time", "Payment", "Total", "Member ID", "Items"
         ));
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
         Vector<Vector<String>> data = new Vector<>();
-        // Sample data entries
-        data.add(new Vector<>(Arrays.asList("1", "10:00 AM", "2024-05-01", "Credit Card", "$100.00", "1", "5", "Edit")));
-        data.add(new Vector<>(Arrays.asList("2", "11:30 AM", "2024-05-02", "Cash", "$75.00", "2", "3", "Edit")));
-        data.add(new Vector<>(Arrays.asList("3", "12:45 PM", "2024-05-03", "Debit Card", "$150.00", "3", "7", "Edit")));
-        data.add(new Vector<>(Arrays.asList("4", "2:00 PM", "2024-05-04", "Credit Card", "$200.00", "4", "9", "Edit")));
-        data.add(new Vector<>(Arrays.asList("5", "3:30 PM", "2024-05-05", "Cash", "$120.00", "5", "4", "Edit")));
-        data.add(new Vector<>(Arrays.asList("6", "4:45 PM", "2024-05-06", "Credit Card", "$180.00", "6", "6", "Edit")));
-        data.add(new Vector<>(Arrays.asList("7", "6:00 PM", "2024-05-07", "Cash", "$90.00", "7", "8", "Edit")));
-        data.add(new Vector<>(Arrays.asList("8", "7:15 PM", "2024-05-08", "Debit Card", "$220.00", "8", "10", "Edit")));
-        data.add(new Vector<>(Arrays.asList("9", "8:30 PM", "2024-05-09", "Credit Card", "$130.00", "9", "12", "Edit")));
-        data.add(new Vector<>(Arrays.asList("10", "9:45 PM", "2024-05-10", "Cash", "$170.00", "10", "14", "Edit")));
+        var transactionsList = transactions.getAllTransactionsJoined();
+        for(TransactionCustProd tran: transactionsList) {
+            String dateTime = tran.occurredAt.toString();
+            data.add(new Vector(Arrays.asList(tran.transactionID, dateTime.split(" ")[0], dateTime.split(" ")[1], tran.paymentMethod, tran.total, tran.customerName, tran.totalProducts)));
+        }
 
-        return new DefaultTableModel(data, columns);
+        return new DefaultTableModel(data, columns){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
     }
 }

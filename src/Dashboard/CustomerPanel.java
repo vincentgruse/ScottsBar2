@@ -1,15 +1,27 @@
 package Dashboard;
 
+import Entities.Customer;
+import Entities.LoyaltyMember;
+import Entities.Transactions;
 import Forms.LoyaltyMemberForm;
+import Models.EmployeeDepartment;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Vector;
 
 public class CustomerPanel {
+    private static LoyaltyMember customer = new LoyaltyMember();
+    private static Transactions transactions = new Transactions();
+
+    static JTable customerTable = new JTable();
+    static JScrollPane scrollPane = new JScrollPane(customerTable);
+
     // Method to create the Customer panel
     public static JPanel createCustomerPanel() {
         JPanel customerPanel = new JPanel(new GridBagLayout());
@@ -31,8 +43,6 @@ public class CustomerPanel {
         customerPanel.add(titleLabel, gbc);
 
         // Adding table to display customer information
-        JTable customerTable = new JTable();
-        JScrollPane scrollPane = new JScrollPane(customerTable);
 
         // Adding scroll pane to the panel
         gbc.gridx = 0;
@@ -41,12 +51,31 @@ public class CustomerPanel {
         customerPanel.add(scrollPane, gbc);
 
         // Adding "+Add Customer" button
-        JButton addButton = new JButton("+Add Loyalty Member");
+        JButton addButton = new JButton("+Edit Loyalty Member");
         addButton.setFont(new Font("Arial", Font.PLAIN, 20));
         addButton.addActionListener(e -> {
             // Open the CustomerForm to add a new customer
             LoyaltyMemberForm customerForm = new LoyaltyMemberForm();
             customerForm.setVisible(true);
+        });
+
+        customerTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) { // Check for double-click
+                    // Get the selected row
+                    int row = customerTable.getSelectedRow();
+
+                    long customerId = Long.parseLong(customerTable.getValueAt(row, 0).toString());
+                    String message = "";
+                    var customerTransactions = transactions.getTransactionByCustomerId(customerId);
+                    for (Transactions tran: customerTransactions) {
+                        message += "Transaction ID: "+tran.transactionID+" | Transaction Time: "+tran.occurredAt+ " \n";
+                    }
+                    // Perform desired action here, for example, show a message dialog
+                    JOptionPane.showMessageDialog(customerTable, !(message.isBlank() && message.isEmpty()) ? message : "No Transactions Found");
+                }
+            }
         });
 
         // Adding button to the panel
@@ -72,23 +101,26 @@ public class CustomerPanel {
 
     private static DefaultTableModel getDefaultTableModel() {
         Vector<String> columns = new Vector<>(Arrays.asList(
-                "Customer ID", "First Name", "Last Name", "Phone", "Email",
-                "Member ID", "Order History", "Action"
+                "Member ID", "First Name", "Last Name", "Phone", "Email"
         ));
 
         Vector<Vector<String>> data = new Vector<>();
-        // Sample data entries
-        data.add(new Vector<>(Arrays.asList("1", "John", "Doe", "123-456-7890", "john@example.com", "M123", "5", "Edit")));
-        data.add(new Vector<>(Arrays.asList("2", "Jane", "Smith", "456-789-0123", "jane@example.com", "M456", "7", "Edit")));
-        data.add(new Vector<>(Arrays.asList("3", "Alice", "Johnson", "789-012-3456", "alice@example.com", "M789", "3", "Edit")));
-        data.add(new Vector<>(Arrays.asList("4", "Bob", "Williams", "012-345-6789", "bob@example.com", "M012", "4", "Edit")));
-        data.add(new Vector<>(Arrays.asList("5", "Charlie", "Brown", "345-678-9012", "charlie@example.com", "M345", "6", "Edit")));
-        data.add(new Vector<>(Arrays.asList("6", "Emily", "Davis", "678-901-2345", "emily@example.com", "M678", "8", "Edit")));
-        data.add(new Vector<>(Arrays.asList("7", "David", "Clark", "901-234-5678", "david@example.com", "M901", "5", "Edit")));
-        data.add(new Vector<>(Arrays.asList("8", "Samantha", "Green", "234-567-8901", "samantha@example.com", "M234", "4", "Edit")));
-        data.add(new Vector<>(Arrays.asList("9", "Michael", "Lee", "567-890-1234", "michael@example.com", "M567", "3", "Edit")));
-        data.add(new Vector<>(Arrays.asList("10", "Jessica", "Scott", "890-123-4567", "jessica@example.com", "M890", "5", "Edit")));
 
-        return new DefaultTableModel(data, columns);
+        var customerList = customer.getAllLoyaltyMembers();
+        for(LoyaltyMember cust: customerList) {
+            data.add(new Vector(Arrays.asList(cust.customerID, cust.firstName, cust.lastName, cust.phoneNumber, cust.email)));
+        }
+
+        return new DefaultTableModel(data, columns){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                switch (column) {
+                    case 0:
+                        return false;
+                    default:
+                        return true;
+                }
+            }
+        };
     }
 }

@@ -1,5 +1,7 @@
 package Entities;
 
+import Models.TransactionCustProd;
+
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -124,6 +126,28 @@ public class Transactions {
         return null;
     }
 
+    public List<Transactions> getTransactionByCustomerId(long customerId) {
+        List<Transactions> transactions = new ArrayList<>();
+        String query = "SELECT * FROM Transactions WHERE CustomerID = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, customerId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Transactions transaction = new Transactions();
+                transaction.setTransactionID(resultSet.getLong("TransactionID"));
+                transaction.setOccuredAt(resultSet.getTimestamp("OccuredAt"));
+                transaction.setTotal(resultSet.getBigDecimal("Total"));
+                transaction.setPaymentMethod(resultSet.getString("PaymentMethod"));
+                transaction.setEmployeeSSN(resultSet.getInt("EmployeeSSN"));
+                transaction.setCustomerID(resultSet.getLong("CustomerID"));
+                transactions.add(transaction);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return transactions;
+    }
+
     public List<Transactions> getAllTransactions() {
         List<Transactions> transactions = new ArrayList<>();
         String query = "SELECT * FROM Transactions";
@@ -137,6 +161,27 @@ public class Transactions {
                 transaction.setPaymentMethod(resultSet.getString("PaymentMethod"));
                 transaction.setEmployeeSSN(resultSet.getInt("EmployeeSSN"));
                 transaction.setCustomerID(resultSet.getLong("CustomerID"));
+                transactions.add(transaction);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return transactions;
+    }
+
+    public List<TransactionCustProd> getAllTransactionsJoined() {
+        List<TransactionCustProd> transactions = new ArrayList<>();
+        String query = "SELECT t.TransactionID, t.OccuredAt, t.Total, t.PaymentMethod,c.FirstName, COUNT(tp.TransactionID) AS TotalProds FROM Transactions t JOIN LoyaltyMember c on t.CustomerID = c.CustomerID JOIN TransactionProducts tp ON t.TransactionID = tp.TransactionID GROUP BY t.TransactionID, t.OccuredAt, t.Total, t.PaymentMethod ";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                TransactionCustProd transaction = new TransactionCustProd();
+                transaction.setTransactionID(resultSet.getLong("TransactionID"));
+                transaction.setOccuredAt(resultSet.getTimestamp("OccuredAt"));
+                transaction.setTotal(resultSet.getBigDecimal("Total"));
+                transaction.setPaymentMethod(resultSet.getString("PaymentMethod"));
+                transaction.customerName = resultSet.getString("FirstName");
+                transaction.totalProducts = resultSet.getInt("TotalProds");
                 transactions.add(transaction);
             }
         } catch (SQLException e) {

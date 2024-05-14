@@ -1,5 +1,7 @@
 package Entities;
 
+import Models.TransactionProductDetail;
+
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -92,18 +94,21 @@ public class TransactionProducts {
         return null;
     }
 
-    public List<TransactionProducts> getTransactionProductsByTransactionId(long transactionID) {
-        List<TransactionProducts> transactionProducts = new ArrayList<>();
-        String query = "SELECT * FROM TransactionProducts WHERE TransactionID = ?";
+    public List<TransactionProductDetail> getTransactionProductsByTransactionId(long transactionID) {
+        List<TransactionProductDetail> transactionProducts = new ArrayList<>();
+        String query = "SELECT tp.*, p.ProductName, p.UnitPrice, p.Discount FROM TransactionProducts tp JOIN Product p ON tp.SKU = p.SKU WHERE TransactionID = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, transactionID);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                TransactionProducts transactionProduct = new TransactionProducts();
+                TransactionProductDetail transactionProduct = new TransactionProductDetail();
                 transactionProduct.setTransactionID(resultSet.getLong("TransactionID"));
                 transactionProduct.setSKU(resultSet.getString("SKU"));
                 transactionProduct.setQuantity(resultSet.getInt("Quantity"));
                 transactionProduct.setOverallDiscount(resultSet.getBigDecimal("OverallDiscount"));
+                transactionProduct.productName = resultSet.getString("ProductName").toString();
+                transactionProduct.unitPrice = resultSet.getBigDecimal("UnitPrice");
+                transactionProduct.discount = resultSet.getBigDecimal("Discount");
                 transactionProducts.add(transactionProduct);
             }
         } catch (SQLException e) {
