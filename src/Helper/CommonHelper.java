@@ -11,7 +11,7 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 public class CommonHelper {
-
+    public static String username;
     public static String hashPassword(String password) {
         // Hash the password using BCrypt
         var result = BCrypt.hashpw(password, BCrypt.gensalt());
@@ -20,5 +20,13 @@ public class CommonHelper {
 
     public static Boolean compareHash(String inputPw, String hashToCompare) {
         return BCrypt.checkpw(inputPw, hashToCompare);
+    }
+
+    public static int getUserStatus() {
+        if (username.toLowerCase().startsWith("admin")) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }
